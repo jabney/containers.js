@@ -3,10 +3,14 @@
 'use strict';
 
 // Export containers namespace.
-var containers = ex.containers || (ex.containers = Object.create(null)),
+var containers = ex.containers || (ex.containers = Object.create(null));
+
+// Containers version.
+containers.version = '0.1'
 
 // Shortcuts.
 
+var
 toString = Object.prototype.toString,
 slice = Array.prototype.slice,
 
