@@ -10,6 +10,7 @@
 (function(containers) {
 'use strict'
 
+containers.dequeImpl = 'dequeList'
 
 describe('Containers', function() {
 
