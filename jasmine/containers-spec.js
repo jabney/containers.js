@@ -13,10 +13,136 @@
 
 describe('Containers', function() {
 
-  describe('Deque', function() {
+  describe('Deque (linked list)', function() {
 
     beforeEach(function() {
-      this.deque = containers.deque();
+      this.deque = containers.dequeList();
+    });
+
+    it('returns null when popping items from an empty queue', function() {
+      expect(this.deque.popFront()).toEqual(null);
+      expect(this.deque.popBack()).toEqual(null);
+      expect(this.deque.size()).toEqual(0);
+    });
+
+    it('accurately reports the size of the queue', function() {
+      expect(this.deque.size()).toEqual(0);
+      
+      this.deque.pushBack(1, 2, 3);
+      expect(this.deque.size()).toEqual(3);
+
+      this.deque.popFront();
+      expect(this.deque.size()).toEqual(2);
+
+      this.deque.popBack();
+      expect(this.deque.size()).toEqual(1);
+
+      this.deque.pushBack(7, 8, 9);
+      expect(this.deque.size()).toEqual(4);
+
+      this.deque.clear();
+      expect(this.deque.size()).toEqual(0);
+    });
+
+    it('correctly peeks at front and back of queue', function() {
+      this.deque.pushBack(1, 2, 3);
+      expect(this.deque.peekFront()).toEqual(1);
+      expect(this.deque.peekBack()).toEqual(3);
+
+      this.deque.clear();
+      expect(this.deque.peekFront()).toBe(null);
+      expect(this.deque.peekBack()).toBe(null);
+    });
+
+    it('correctly clears the queue', function(){
+      expect(this.deque.size()).toEqual(0);
+
+      this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
+      expect(this.deque.size()).toEqual(7);
+
+      this.deque.clear();
+      expect(this.deque.size()).toEqual(0);
+      expect(this.deque.has(1)).toBe(false);
+      expect(this.deque.peekFront()).toBe(null);
+      expect(this.deque.peekBack()).toBe(null);
+    });
+
+    it('correctly copies the queue', function() {
+      var d2;
+      this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
+      d2 = this.deque.copy();
+      expect(this.deque).not.toBe(d2);
+      expect(this.deque.size()).toEqual(d2.size());
+      expect(this.deque.items()).toEqual(d2.items());
+    });
+
+    it('can accurately report if the queue contains a specific item', function() {
+      this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
+      expect(this.deque.has(0)).toBe(false);
+      expect(this.deque.has(1)).toBe(true);
+      expect(this.deque.has(2)).toBe(true);
+      expect(this.deque.has(3)).toBe(true);
+      expect(this.deque.has(4)).toBe(true);
+      expect(this.deque.has(5)).toBe(true);
+      expect(this.deque.has(6)).toBe(true);
+      expect(this.deque.has(7)).toBe(true);
+      expect(this.deque.has(8)).toBe(false);
+    });
+
+    it('stores items added from front or back in the correct order', function() {
+      this.deque.pushFront(4, 3, 2, 1);
+      expect(this.deque.size()).toEqual(4);
+
+      this.deque.pushBack(5, 6, 7);
+      expect(this.deque.size()).toEqual(7);
+
+      expect(this.deque.items()).toEqual([1, 2, 3, 4, 5, 6, 7]);
+    });
+
+    it('properly pops items from front and back of queue', function() {
+      this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
+
+      expect(this.deque.popFront()).toEqual(1);
+      expect(this.deque.popFront()).toEqual(2);
+      expect(this.deque.popFront()).toEqual(3);
+
+      expect(this.deque.popBack()).toEqual(7);
+      expect(this.deque.popBack()).toEqual(6);
+      expect(this.deque.popBack()).toEqual(5);
+      expect(this.deque.popBack()).toEqual(4);
+
+      expect(this.deque.popBack()).toEqual(null);
+      expect(this.deque.popFront()).toEqual(null);
+      expect(this.deque.size()).toEqual(0);
+    });
+
+    it('properly removes arbitrary items from the queue', function() {
+      this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
+      this.deque.remove(1, 3, 4, 7);
+      expect(this.deque.has(1)).toBe(false);
+      expect(this.deque.has(2)).toBe(true);
+      expect(this.deque.has(3)).toBe(false);
+      expect(this.deque.has(4)).toBe(false);
+      expect(this.deque.has(5)).toBe(true);
+      expect(this.deque.has(6)).toBe(true);
+      expect(this.deque.has(7)).toBe(false);
+    });
+
+    it('returns "this" for all methods that don\'t return a value', function() {
+      expect(this.deque.pushFront()).toBe(this.deque);
+      expect(this.deque.pushBack()).toBe(this.deque);
+      expect(this.deque.remove()).toBe(this.deque);
+      expect(this.deque.clear()).toBe(this.deque);
+      expect(this.deque.forwardIterator()).toBe(this.deque);
+      expect(this.deque.reverseIterator()).toBe(this.deque);
+    });
+  });
+
+
+  describe('Deque (array)', function() {
+
+    beforeEach(function() {
+      this.deque = containers.dequeArray();
     });
 
     it('returns null when popping items from an empty queue', function() {
