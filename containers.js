@@ -6,7 +6,17 @@
 var containers = ex.containers || (ex.containers = Object.create(null));
 
 // Containers version.
-containers.version = '0.1'
+containers.version = '0.1';
+
+// Deque implementation used by other containers
+// bag, stack and queue.
+containers.dequeImpl = 'dequeArray';
+
+// Return the specified deque implementation.
+function getDeque() {
+  var impl = containers[containers.dequeImpl];
+  return impl();
+}
 
 // Shortcuts.
 
@@ -56,8 +66,9 @@ encodeType = (function() {
 
 // ---------------------------------------------------------------
 // Deque - a double-ended queue (pronounced "deck").
+// Linked list implementation.
 // ---------------------------------------------------------------
-containers.deque = function deque() {
+containers.dequeList = function dequeList() {
   var head = null, tail = null, size = 0;
 
   return {
@@ -157,7 +168,204 @@ containers.deque = function deque() {
 
   // Return a copy of this queue.
   copy: function() {
-    return deque().items(this.items());
+    return dequeList().items(this.items());
+  },
+
+  // Iterate the queue from front to back. O(n)
+  forwardIterator: function(action, context) {
+    var node = head;
+    while (node !== null) {
+      action.call(context, node.item);
+      node = node.next;
+    }
+    return this;
+  },
+
+  // Iterate the queue from back to front. O(n)
+  reverseIterator: function(action, context) {
+    var node = tail;
+    while (node !== null) {
+      action.call(context, node.item);
+      node = node.prev;
+    }
+    return this;
+  },
+
+  // Return true if the deque contains 'item'. O(n)
+  has: function(item) {
+    return !!find(item);
+  },
+
+  // Return the number of items in the queue. O(1)
+  size: function() {
+    return size;
+  }};
+
+  // Return the node that contains 'item'. O(n)
+  function find(item) {
+    var node = head;
+    while (node !== null) {
+      if (node.item === item)
+        return node;
+      node = node.next;
+    }
+    return null;
+  }
+
+  // Build an array of items from the supplied iterator. O(n)
+  function getItems(iterator) {
+    var items = [];
+    iterator(function(item) {
+      items.push(item);
+    });
+    return items;
+  }
+
+  // Remove a single node from the queue.
+  function removeNode(item) {
+    var node, tempNode;
+    if ((node = find(item)) !== null) {
+      if (node === head) {
+        tempNode = head;
+        head = head.next;
+        if (head) {
+          head.prev = null;
+          tempNode.next = null;  
+          
+        }
+      }
+      else if (node === tail) {
+        tempNode = tail;
+        tail = tail.prev;
+        if (tail) {
+          tail.next = null;
+          tempNode.prev = null;
+        }
+      }
+      else {
+        tempNode = node;
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        tempNode.prev = tempNode.next = null;
+      }
+      --size;
+    }
+  }
+
+  // Return a linked node.
+  function Node(item, prev, next) {
+    this.item = item;
+    this.prev = prev || null;
+    this.next = next || null;
+  }
+};
+
+// ---------------------------------------------------------------
+// Deque - a double-ended queue (pronounced "deck").
+// Array implementation.
+// ---------------------------------------------------------------
+containers.dequeArray = function dequeArray() {
+  var head = null, tail = null, size = 0;
+  var array = [];
+  
+  return {
+
+  // Get or set an array of items for this queue.
+  items: function(items) {
+    if (!arguments.length)
+      return getItems(this.forwardIterator);
+    this.clear();
+    return this.pushBack.apply(this, items);
+  },
+
+  // Add one or more items to the front of the queue. O(k)
+  pushFront: function() {
+    slice.call(arguments, 0).forEach(function(item) {
+      if (size === 0) {
+        head = tail = new Node(item, null, null);
+      } else {
+        head.prev = new Node(item, null, head);
+        head = head.prev;
+      }
+      ++size;
+    });
+    return this;
+  },
+
+  // Add one or more items to the back of the queue. O(k)
+  pushBack: function() {
+    slice.call(arguments, 0).forEach(function(item) {
+      if (size === 0) {
+        head = tail = new Node(item, null, null);
+      } else {
+        tail.next = new Node(item, tail, null);
+        tail = tail.next;
+      }
+      ++size;
+    });
+    return this;
+  },
+
+  // Remove an item from the front of the queue. O(1)
+  popFront: function() {
+    var node = head, tempNode;
+    if (head !== null) {
+      if (head === tail) {
+        head = tail = null;
+      } else {
+        tempNode = head;
+        head = head.next;
+        tempNode.next = null;
+      }
+      --size;
+    }
+    return node && node.item;
+  },
+
+  // Remove an item from the back of the queue. O(1)
+  popBack: function() {
+    var node = tail, tempNode;
+    if (tail !== null) {
+      if (head === tail) {
+        head = tail = null;
+      } else {
+        tempNode = tail;
+        tail = tail.prev;
+        tempNode.prev = null;
+      }
+      --size;
+    }
+    return node && node.item;
+  },
+
+  // Return the front item without modifying the queue. O(1)
+  peekFront: function() {
+    return head && head.item;
+  },
+
+  // Return the back item without modifying the queue. O(1)
+  peekBack: function() {
+    return tail && tail.item;
+  },
+
+  // Remove one or more items from the queue. O(kn)
+  remove: function() {
+    slice.call(arguments, 0).forEach(function(item) {
+      removeNode(item);
+    });
+    return this;
+  },
+
+  // Remove all items from the queue. O(1)
+  clear: function() {
+    head = tail = null;
+    size = 0;
+    return this;
+  },
+
+  // Return a copy of this queue.
+  copy: function() {
+    return dequeArray().items(this.items());
   },
 
   // Iterate the queue from front to back. O(n)
@@ -253,7 +461,7 @@ containers.deque = function deque() {
 // Bag - an unordered collection of items.
 // ---------------------------------------------------------------
 containers.bag = function bag() {
-  var deque = containers.deque();
+  var deque = getDeque();
 
   return {
 
@@ -308,7 +516,7 @@ containers.bag = function bag() {
 // Stack - a push-down LIFO stack (last in first out).
 // ---------------------------------------------------------------
 containers.stack = function stack() {
-  var deque = containers.deque();
+  var deque = getDeque();
 
   return {
 
@@ -360,7 +568,7 @@ containers.stack = function stack() {
 // Queue - a FIFO queue (first in first out).
 // ---------------------------------------------------------------
 containers.queue = function queue() {
-  var deque = containers.deque();
+  var deque = getDeque();
 
   return {
 
