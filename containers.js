@@ -61,7 +61,7 @@ encodeType = (function() {
 
 // ---------------------------------------------------------------
 // Deque - a double-ended queue (pronounced "deck").
-// The specified implementation (default: dequeList).
+// Return the specified implementation (default: dequeList).
 // ---------------------------------------------------------------
 containers.deque = function deque() {
   var impl = containers[containers.dequeImpl];
@@ -265,8 +265,7 @@ containers.dequeList = function dequeList() {
 };
 
 // ---------------------------------------------------------------
-// Deque - a double-ended queue (pronounced "deck").
-// Array implementation.
+// Deque - array implementation.
 // ---------------------------------------------------------------
 containers.dequeArray = function dequeArray() {
   var array = [];
