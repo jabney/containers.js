@@ -702,14 +702,16 @@ containers.set = function set() {
 
   // Return true if b is equal to this set.
   equals: function(b) {
-    // Sets should be the same size.
-    if (this.size() !== b.size())
-      return false;
-    // Sets should have the same items.
-    this.each(function(item) {
-      if (!b.has(item))
+    if (this !== b) {
+      // Sets should be the same size.
+      if (this.size() !== b.size())
         return false;
-    });
+      // Sets should have the same items.
+      this.each(function(item) {
+        if (!b.has(item))
+          return false;
+      });
+    }
     return true;
   },
 
