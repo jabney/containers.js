@@ -5,18 +5,12 @@
 // Export containers namespace.
 var containers = ex.containers || (ex.containers = Object.create(null));
 
-// Containers version.
+// containers.js version.
 containers.version = '0.1';
 
 // Deque implementation used by other containers
 // bag, stack and queue.
-containers.dequeImpl = 'dequeArray';
-
-// Return the specified deque implementation.
-function getDeque() {
-  var impl = containers[containers.dequeImpl];
-  return impl();
-}
+containers.dequeImpl = 'dequeList';
 
 // Shortcuts.
 
@@ -64,9 +58,19 @@ encodeType = (function() {
 })();
 
 
+
 // ---------------------------------------------------------------
 // Deque - a double-ended queue (pronounced "deck").
-// Linked list implementation.
+// The specified implementation (default: dequeList).
+// ---------------------------------------------------------------
+containers.deque = function deque() {
+  var impl = containers[containers.dequeImpl];
+  return impl();
+};
+
+
+// ---------------------------------------------------------------
+// Deque - linked list implementation.
 // ---------------------------------------------------------------
 containers.dequeList = function dequeList() {
   var head = null, tail = null, size = 0;
@@ -292,22 +296,26 @@ containers.dequeArray = function dequeArray() {
 
   // Remove an item from the front of the queue.
   popFront: function() {
-    return array.shift() || null;
+    var item = array.shift();
+    return item !== undefined ? item : null;
   },
 
   // Remove an item from the back of the queue.
   popBack: function() {
-    return array.pop() || null;
+    var item = array.pop();
+    return item !== undefined ? item : null;
   },
 
   // Return the front item without modifying the queue.
   peekFront: function() {
-    return array[0] || null;
+    var item = array[0];
+    return item !== undefined ? item : null;
   },
 
   // Return the back item without modifying the queue.
   peekBack: function() {
-    return array[array.length-1] || null;
+    var item = array[array.length-1];
+    return item !== undefined ? item : null;
   },
 
   // Remove one or more items from the queue.
@@ -360,7 +368,7 @@ containers.dequeArray = function dequeArray() {
 // Bag - an unordered collection of items.
 // ---------------------------------------------------------------
 containers.bag = function bag() {
-  var deque = getDeque();
+  var deque = containers.deque();
 
   return {
 
@@ -415,7 +423,7 @@ containers.bag = function bag() {
 // Stack - a push-down LIFO stack (last in first out).
 // ---------------------------------------------------------------
 containers.stack = function stack() {
-  var deque = getDeque();
+  var deque = containers.deque();
 
   return {
 
@@ -467,7 +475,7 @@ containers.stack = function stack() {
 // Queue - a FIFO queue (first in first out).
 // ---------------------------------------------------------------
 containers.queue = function queue() {
-  var deque = getDeque();
+  var deque = containers.deque();
 
   return {
 
