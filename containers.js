@@ -273,24 +273,20 @@ containers.dequeArray = function dequeArray() {
   items: function(items) {
     if (!arguments.length)
       return array.slice(0, array.length);
-    this.clear();
     array = items;
     return this;
   },
 
   // Add one or more items to the front of the queue.
   pushFront: function() {
-    slice.call(arguments, 0).forEach(function(item) {
-      array.unshift(item);
-    });
+    var args = slice.call(arguments, 0).reverse();
+    array.unshift.apply(array, args);
     return this;
   },
 
   // Add one or more items to the back of the queue.
   pushBack: function() {
-    slice.call(arguments, 0).forEach(function(item) {
-      array.push(item);
-    });
+    array.push.apply(array, arguments);
     return this;
   },
 
