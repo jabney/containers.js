@@ -221,7 +221,7 @@ containers.dequeList = function dequeList() {
     return items;
   }
 
-  // Remove a single node from the queue.
+  // Remove a single node from the queue. O(n)
   function removeNode(item) {
     var node, tempNode;
     if ((node = find(item)) !== null) {
@@ -265,101 +265,68 @@ containers.dequeList = function dequeList() {
 // Array implementation.
 // ---------------------------------------------------------------
 containers.dequeArray = function dequeArray() {
-  var head = null, tail = null, size = 0;
   var array = [];
-  
+
   return {
 
   // Get or set an array of items for this queue.
   items: function(items) {
     if (!arguments.length)
-      return getItems(this.forwardIterator);
+      return array.slice(0, array.length);
     this.clear();
-    return this.pushBack.apply(this, items);
+    array = items;
+    return this;
   },
 
-  // Add one or more items to the front of the queue. O(k)
+  // Add one or more items to the front of the queue.
   pushFront: function() {
     slice.call(arguments, 0).forEach(function(item) {
-      if (size === 0) {
-        head = tail = new Node(item, null, null);
-      } else {
-        head.prev = new Node(item, null, head);
-        head = head.prev;
-      }
-      ++size;
+      array.unshift(item);
     });
     return this;
   },
 
-  // Add one or more items to the back of the queue. O(k)
+  // Add one or more items to the back of the queue.
   pushBack: function() {
     slice.call(arguments, 0).forEach(function(item) {
-      if (size === 0) {
-        head = tail = new Node(item, null, null);
-      } else {
-        tail.next = new Node(item, tail, null);
-        tail = tail.next;
-      }
-      ++size;
+      array.push(item);
     });
     return this;
   },
 
-  // Remove an item from the front of the queue. O(1)
+  // Remove an item from the front of the queue.
   popFront: function() {
-    var node = head, tempNode;
-    if (head !== null) {
-      if (head === tail) {
-        head = tail = null;
-      } else {
-        tempNode = head;
-        head = head.next;
-        tempNode.next = null;
-      }
-      --size;
-    }
-    return node && node.item;
+    return array.shift() || null;
   },
 
-  // Remove an item from the back of the queue. O(1)
+  // Remove an item from the back of the queue.
   popBack: function() {
-    var node = tail, tempNode;
-    if (tail !== null) {
-      if (head === tail) {
-        head = tail = null;
-      } else {
-        tempNode = tail;
-        tail = tail.prev;
-        tempNode.prev = null;
-      }
-      --size;
-    }
-    return node && node.item;
+    return array.pop() || null;
   },
 
-  // Return the front item without modifying the queue. O(1)
+  // Return the front item without modifying the queue.
   peekFront: function() {
-    return head && head.item;
+    return array[0] || null;
   },
 
-  // Return the back item without modifying the queue. O(1)
+  // Return the back item without modifying the queue.
   peekBack: function() {
-    return tail && tail.item;
+    return array[array.length-1] || null;
   },
 
-  // Remove one or more items from the queue. O(kn)
+  // Remove one or more items from the queue.
   remove: function() {
     slice.call(arguments, 0).forEach(function(item) {
-      removeNode(item);
+      var index = array.indexOf(item);
+      if (index >= 0)
+        array.splice(index, 1);
     });
     return this;
   },
 
-  // Remove all items from the queue. O(1)
+  // Remove all items from the queue.
   clear: function() {
-    head = tail = null;
-    size = 0;
+    array = [];
     return this;
   },
 
@@ -368,93 +335,29 @@ containers.dequeArray = function dequeArray() {
     return dequeArray().items(this.items());
   },
 
-  // Iterate the queue from front to back. O(n)
+  // Iterate the queue from front to back.
   forwardIterator: function(action, context) {
-    var node = head;
-    while (node !== null) {
-      action.call(context, node.item);
-      node = node.next;
-    }
+    if (action)
+      array.forEach(action, context);
     return this;
   },
 
-  // Iterate the queue from back to front. O(n)
+  // Iterate the queue from back to front.
   reverseIterator: function(action, context) {
-    var node = tail;
-    while (node !== null) {
-      action.call(context, node.item);
-      node = node.prev;
-    }
+    if (action)
+      array.reverse().forEach(action, context);
     return this;
   },
 
-  // Return true if the deque contains 'item'. O(n)
+  // Return true if the deque contains 'item'.
   has: function(item) {
-    return !!find(item);
+    return array.indexOf(item) >= 0;
   },
 
-  // Return the number of items in the queue. O(1)
+  // Return the number of items in the queue.
   size: function() {
-    return size;
+    return array.length;
   }};
-
-  // Return the node that contains 'item'. O(n)
-  function find(item) {
-    var node = head;
-    while (node !== null) {
-      if (node.item === item)
-        return node;
-      node = node.next;
-    }
-    return null;
-  }
-
-  // Build an array of items from the supplied iterator. O(n)
-  function getItems(iterator) {
-    var items = [];
-    iterator(function(item) {
-      items.push(item);
-    });
-    return items;
-  }
-
-  // Remove a single node from the queue.
-  function removeNode(item) {
-    var node, tempNode;
-    if ((node = find(item)) !== null) {
-      if (node === head) {
-        tempNode = head;
-        head = head.next;
-        if (head) {
-          head.prev = null;
-          tempNode.next = null;  
-          
-        }
-      }
-      else if (node === tail) {
-        tempNode = tail;
-        tail = tail.prev;
-        if (tail) {
-          tail.next = null;
-          tempNode.prev = null;
-        }
-      }
-      else {
-        tempNode = node;
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-        tempNode.prev = tempNode.next = null;
-      }
-      --size;
-    }
-  }
-
-  // Return a linked node.
-  function Node(item, prev, next) {
-    this.item = item;
-    this.prev = prev || null;
-    this.next = next || null;
-  }
 };
 
 // ---------------------------------------------------------------
