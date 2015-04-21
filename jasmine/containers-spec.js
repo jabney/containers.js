@@ -520,11 +520,114 @@ describe('Containers', function() {
 
 
   describe('Priority Queue', function() {
+    // compare, items, insert, next, clear, peek, copy, size
+    
+    beforeEach(function() {
+      this.pq = containers.priorityQueue();
+    });
+
+    it('inserts and removes items in priority order', function() {
+      this.pq.insert(1, 3, 5, 4, 2);
+      expect(this.pq.next()).toEqual(1);
+      expect(this.pq.next()).toEqual(2);
+      expect(this.pq.next()).toEqual(3);
+      expect(this.pq.next()).toEqual(4);
+      expect(this.pq.next()).toEqual(5);
+      expect(this.pq.next()).toBe(null);
+      expect(this.pq.next()).toBe(null);
+    });
+    
+    it('returns null when queue is empty', function() {
+      expect(this.pq.next()).toBe(null);
+    });
+    
+    it('gets and sets items in the queue', function() {
+      this.pq.insert(7, 8, 9);
+      this.pq.items([1, 2, 3, 4]);
+      expect(this.pq.size()).toEqual(4);
+      expect(this.pq.next()).toEqual(1);
+      expect(this.pq.next()).toEqual(2);
+      expect(this.pq.next()).toEqual(3);
+      expect(this.pq.next()).toEqual(4);
+    });
+
+    it('peeks at the next item in the queue', function() {
+      this.pq.insert(7, 6, 5);
+      expect(this.pq.peek()).toEqual(5);
+      this.pq.next();
+      expect(this.pq.peek()).toEqual(6);
+      this.pq.next();
+      expect(this.pq.peek()).toEqual(7);
+      this.pq.next();
+      expect(this.pq.peek()).toBe(null);
+    });
+
+    it('reports the size of the queue', function() {
+      expect(this.pq.size()).toEqual(0);
+      this.pq.insert(1);
+      expect(this.pq.size()).toEqual(1);
+      this.pq.insert(2, 3, 4);
+      expect(this.pq.size()).toEqual(4);
+      this.pq.next();
+      expect(this.pq.size()).toEqual(3);
+      this.pq.next();
+      expect(this.pq.size()).toEqual(2);
+      this.pq.next();
+      expect(this.pq.size()).toEqual(1);
+      this.pq.next();
+      expect(this.pq.size()).toEqual(0);
+    });
+
+    it('copies the queue', function() {
+      var pq, items = [9, 8, 7];
+      this.pq.items(items);
+      pq = this.pq.copy();
+      expect(this.pq).not.toBe(pq);
+      expect(this.pq.size()).toEqual(pq.size());
+      expect(this.pq.items()).toEqual(pq.items());
+      expect(this.pq.next()).toEqual(pq.next());
+      expect(this.pq.next()).toEqual(pq.next());
+      expect(this.pq.next()).toEqual(pq.next());
+      expect(this.pq.next()).toEqual(pq.next());
+      expect(this.pq.next()).toEqual(pq.next());
+    });
+
+    it('clears the queue', function() {
+      this.pq.insert(2, 4, 3);
+      expect(this.pq.size()).toEqual(3);
+      this.pq.clear();
+      expect(this.pq.size()).toEqual(0);
+      expect(this.pq.next()).toBe(null);
+    });
+
+    it('gets and sets the compare method', function() {
+      var compare1 = this.pq.compare(),
+          compare2 = function(a, b) { return b < a; };
+      expect(this.pq.compare()).toBe(compare1);
+      this.pq.compare(compare2);
+      expect(this.pq.compare()).toBe(compare2);
+      expect(this.pq.compare()).not.toBe(compare1);
+    });
+
+    it('can use max heap compare method', function() {
+      this.pq.compare(function(a, b) { return b < a; });
+      this.pq.insert(1, 2, 3, 6, 5, 4);
+      expect(this.pq.next()).toEqual(6);
+      expect(this.pq.next()).toEqual(5);
+      expect(this.pq.next()).toEqual(4);
+      expect(this.pq.next()).toEqual(3);
+      expect(this.pq.next()).toEqual(2);
+      expect(this.pq.next()).toEqual(1);
+      expect(this.pq.next()).toBe(null);
+      expect(this.pq.next()).toBe(null);
+    });
 
   });
 
 
   describe('Set', function() {
+    // key, items, keys, add, remove, clear, has, size, each, copy,
+    // equals, union, intersection, difference, complement, toString.
 
   });
 });
