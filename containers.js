@@ -525,7 +525,7 @@ containers.queue = function queue() {
 // ---------------------------------------------------------------
 // Priority queue - priority item first container.
 // ---------------------------------------------------------------
-containers.pq = function pq() {
+containers.priorityQueue = function priorityQueue() {
   var heap = [],
   // Min heap compare by default.
   compare = function(a, b) { return a < b; };
@@ -559,7 +559,7 @@ containers.pq = function pq() {
   },
 
   // Remove the next item from the priority queue.
-  remove: function() {
+  next: function() {
     var head = null, last;
     if (heap.length) {
       head = heap[0];
@@ -579,11 +579,12 @@ containers.pq = function pq() {
 
   // Return the head item without modifying the queue.
   peek: function() {
-    return heap[0];
+    var item = heap[0];
+    return item !== undefined ? item : null;
   },
 
   copy: function() {
-    return pq().compare(this.compare).items(heap);
+    return priorityQueue().compare(this.compare()).items(heap);
   },
 
   // Return the count of items in the priority queue.
