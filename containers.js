@@ -653,7 +653,7 @@ containers.set = function set() {
 
   // Return an array of this set's keys.
   keys: function() {
-    return getKeys(this.each);
+    return getKeys(this.each).sort();
   },
 
   // Add one or more items to the set.
@@ -711,7 +711,7 @@ containers.set = function set() {
 
   // Convert this set to a representative string implicitly.
   toString: function() {
-    return '{' + this.keys().sort().join(',') + '}';
+    return '{' + this.keys().join(',') + '}';
   },
 
   // Return true if b is equal to this set.
@@ -785,3 +785,4 @@ containers.set = function set() {
 };
 
 })(typeof exports !== 'undefined' && exports || this);
+
