@@ -630,7 +630,7 @@ containers.set = function set() {
 
   // The default key function for items added to the set.
   key = function() {
-    return ''.concat('(', this, ':', encodeType(this), ')');
+    return ''.concat(this, ':', encodeType(this));
   };
 
   return {
@@ -706,7 +706,7 @@ containers.set = function set() {
 
   // Return a copy of this set.
   copy: function() {
-    return set().key(this.key).items(this.items())
+    return set().key(this.key()).items(this.items())
   },
 
   // Convert this set to a representative string implicitly.
@@ -746,22 +746,19 @@ containers.set = function set() {
     return this;
   },
 
-  // a Δ b (symmetric difference, (a ∪ b) minus (a ∩ b))
-  difference: function(b) {
-    var intersection = this.copy().intersection(b);
-    this.union(b);
-    this.complement(intersection);
-    // intersection.each(function(item) {
-    //   this.remove(item);
-    // }, this);
-    return this;
-  },
-
   // a \ b (relative complement, a minus b)
   complement: function(b) {
     b.each(function(item) {
       this.remove(item);
     }, this);
+    return this;
+  },
+
+  // a Δ b (symmetric difference, (a ∪ b) minus (a ∩ b))
+  difference: function(b) {
+    var intersection = this.copy().intersection(b);
+    this.union(b);
+    this.complement(intersection);
     return this;
   }};
 
