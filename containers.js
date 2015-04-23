@@ -628,14 +628,14 @@ containers.priorityQueue = function priorityQueue() {
 containers.set = function set() {
   var st = Object.create(null), size = 0,
 
-  // The default key function.
+  // The default key function for items added to the set.
   key = function() {
     return ''.concat('(', this, ':', encodeType(this), ')');
   };
 
   return {
 
-  // Get or set the key method for set key generation.
+  // Get or set the key method for item key generation.
   key: function(method) {
     if(!arguments.length)
       return key;
@@ -704,8 +704,14 @@ containers.set = function set() {
     return this;
   },
 
+  // Return a copy of this set.
   copy: function() {
     return set().key(this.key).items(this.items())
+  },
+
+  // Convert this set to a representative string implicitly.
+  toString: function() {
+    return '{' + this.keys().sort().join(',') + '}';
   },
 
   // Return true if b is equal to this set.
@@ -757,11 +763,6 @@ containers.set = function set() {
       this.remove(item);
     }, this);
     return this;
-  },
-
-  // Convert this set to a representative string.
-  toString: function() {
-    return '{' + this.keys().sort().join(',') + '}';
   }};
 
   // Return an array of this set's items.
