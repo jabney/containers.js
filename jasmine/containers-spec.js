@@ -621,14 +621,190 @@ describe('Containers', function() {
       expect(this.pq.next()).toBe(null);
       expect(this.pq.next()).toBe(null);
     });
-
   });
 
 
   describe('Set', function() {
     // key, items, keys, add, remove, clear, has, size, each, copy,
     // equals, union, intersection, difference, complement, toString.
+    var
+    o1 = {id: 'id1', toString: toStr},
+    o2 = {id: 'id2', toString: toStr},
+    o3 = {id: 'id3', toString: toStr},
+    o4 = {id: 'id4', toString: toStr},
+    objects = [o1, o2, o3, o4];
 
+    // The toString method for objects.
+    function toStr() {
+      return this.id;
+    }
+
+    beforeEach(function() {
+      this.set = containers.set();
+    });
+
+    it('stores unique items', function() {
+      this.set.add(1, 1, 2, 2, 3);
+      expect(this.set.size()).toEqual(3);
+      expect(this.set.has(1)).toBe(true);
+      expect(this.set.has(2)).toBe(true);
+      expect(this.set.has(3)).toBe(true);
+      expect(this.set.has(4)).toBe(false);
+      expect(this.set.has('1')).toBe(false);
+
+      this.set.items(['a', 'a', 'b', 'b', 'c']);
+      expect(this.set.size()).toEqual(3);
+      expect(this.set.has('a')).toBe(true);
+      expect(this.set.has('b')).toBe(true);
+      expect(this.set.has('c')).toBe(true);
+      expect(this.set.has('z')).toBe(false);
+
+      this.set.items([o1, o2, o3, o4]);
+      expect(this.set.size()).toEqual(4);
+      expect(this.set.has(o1)).toBe(true);
+      expect(this.set.has(o2)).toBe(true);
+      expect(this.set.has(o3)).toBe(true);
+      expect(this.set.has(o4)).toBe(true);
+      expect(this.set.has([])).toBe(false);
+      expect(this.set.has({})).toBe(false);
+    });
+
+    it('adds and removes items', function() {
+      this.set.add(5, 6, 7);
+      expect(this.set.has(5)).toBe(true);
+      expect(this.set.has(6)).toBe(true);
+      expect(this.set.has(7)).toBe(true);
+      this.set.remove(6);
+      expect(this.set.has(5)).toBe(true);
+      expect(this.set.has(6)).toBe(false);
+      expect(this.set.has(7)).toBe(true);
+      this.set.remove(5, 7);
+      expect(this.set.has(5)).toBe(false);
+      expect(this.set.has(6)).toBe(false);
+      expect(this.set.has(7)).toBe(false);
+    });
+
+    it('reports set size', function() {
+      expect(this.set.size()).toEqual(0);
+      this.set.add(1);
+      expect(this.set.size()).toEqual(1);
+      this.set.add(2, 3, 4);
+      expect(this.set.size()).toEqual(4);
+      this.set.remove(3);
+      expect(this.set.size()).toEqual(3);
+      this.set.remove(1, 2, 4);
+      expect(this.set.size()).toEqual(0);
+    });
+
+    it('clears the set', function() {
+      this.set.add('a', 'b', 'c');
+      this.set.clear();
+      expect(this.set.size()).toEqual(0);
+      expect(this.set.has('a')).toBe(false);
+      expect(this.set.has('b')).toBe(false);
+      expect(this.set.has('c')).toBe(false);
+    });
+    
+    it('reports if the set contains an item', function() {
+      this.set.add('aye', 'bee', 'see');
+      expect(this.set.has('aye')).toBe(true);
+      expect(this.set.has('bee')).toBe(true);
+      expect(this.set.has('see')).toBe(true);
+      expect(this.set.has('a')).toBe(false);
+      expect(this.set.has('b')).toBe(false);
+      expect(this.set.has('c')).toBe(false);
+    });
+
+    it('iterates the set', function() {
+      var items = [1, 2, 3],
+      keys = ['1:3', '2:3', '3:3'];
+      this.set.items(items);
+      this.set.each(function(value, key) {
+        expect(items.indexOf(value)).toBeGreaterThan(-1);
+        expect(keys.indexOf(key)).toBeGreaterThan(-1);
+      });
+    });
+
+    it('copies the set', function() {
+      this.set.add(6, 4, 2);
+      var b = this.set.copy();
+      expect(this.set).not.toBe(b);
+      expect(this.set.keys()).toEqual(b.keys());
+    });
+
+    it('supports objects, strings, and numbers mixed together', function() {
+      this.set.add(1, '1', o1, 2, '2', o2, 3, '3', o3);
+      expect(this.set.size()).toEqual(9);
+      expect(this.set.has(1)).toBe(true);
+      expect(this.set.has(2)).toBe(true);
+      expect(this.set.has(3)).toBe(true);
+      expect(this.set.has('1')).toBe(true);
+      expect(this.set.has('2')).toBe(true);
+      expect(this.set.has('3')).toBe(true);
+      expect(this.set.has(o1)).toBe(true);
+      expect(this.set.has(o2)).toBe(true);
+      expect(this.set.has(o3)).toBe(true);
+    });
+
+    it('can have its key method overriddeen', function() {
+      function key() { return this.id; };
+      this.set.key(key).items(objects);
+      expect(this.set.key()).toBe(key);
+      expect(this.set.size()).toEqual(4);
+      expect(this.set.has(o1)).toBe(true);
+      expect(this.set.has(o2)).toBe(true);
+      expect(this.set.has(o3)).toBe(true);
+      expect(this.set.has(o4)).toBe(true);
+      expect(this.set.has({})).toBe(false);
+    });
+
+    it('returns set keys in sorted order', function() {
+      this.set.add(1, 4, 3, 2);
+      expect(this.set.keys()).toEqual(['1:3', '2:3', '3:3', '4:3']);
+    });
+
+    it('gets and sets an array of items', function() {
+      this.set.items([1, 2, 3]);
+      expect(this.set.size()).toEqual(3);
+      expect(this.set.items().sort()).toEqual([1, 2, 3])
+    });
+
+    it('determines set equality', function() {
+      this.set.items(o1, o2, o3);
+      expect(this.set.equals(this.set)).toBe(true);
+      var b = this.set.copy();
+      expect(this.set.equals(b)).toBe(true);
+      b.items([o1, o2, o4]);
+      expect(this.set.equals(b)).toBe(false);
+    });
+
+    it('performs a set union', function() {
+      var b = containers.set().add(1, 2, 3);
+      this.set.add(2, 3, 4);
+      this.set.union(b);
+      expect(this.set.items().sort()).toEqual([1, 2, 3, 4])
+    });
+    
+    it('performs a set intersection', function() {
+      var b = containers.set().add(1, 2, 3);
+      this.set.add(2, 3, 4);
+      this.set.intersection(b);
+      expect(this.set.items().sort()).toEqual([2, 3])
+    });
+    
+    it('performs a set complement', function() {
+      var b = containers.set().add(1, 2, 3);
+      this.set.add(3, 4, 5);
+      this.set.complement(b);
+      expect(this.set.items().sort()).toEqual([4, 5]);
+    });
+
+    it('performs a set difference', function() {
+      var b = containers.set().add(1, 2, 3);
+      this.set.add(2, 3, 4);
+      this.set.difference(b);
+      expect(this.set.items().sort()).toEqual([1, 4]);
+    });
   });
 });
 
