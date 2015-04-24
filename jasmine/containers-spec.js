@@ -625,8 +625,6 @@ describe('Containers', function() {
 
 
   describe('Set', function() {
-    // key, items, keys, add, remove, clear, has, size, each, copy,
-    // equals, union, intersection, difference, complement, toString.
     var
     o1 = {id: 'id1', toString: toStr},
     o2 = {id: 'id2', toString: toStr},
@@ -704,7 +702,7 @@ describe('Containers', function() {
       expect(this.set.has('b')).toBe(false);
       expect(this.set.has('c')).toBe(false);
     });
-    
+
     it('reports if the set contains an item', function() {
       this.set.add('aye', 'bee', 'see');
       expect(this.set.has('aye')).toBe(true);
@@ -782,21 +780,36 @@ describe('Containers', function() {
       var b = containers.set().add(1, 2, 3);
       this.set.add(2, 3, 4);
       this.set.union(b);
-      expect(this.set.items().sort()).toEqual([1, 2, 3, 4])
+      expect(this.set.items().sort()).toEqual([1, 2, 3, 4]);
+
+      this.set.items([o1, o2, o3]);
+      b.items([o2, o3, o4]);
+      this.set.union(b);
+      expect(this.set.items().sort()).toEqual([o1, o2, o3, o4]);
     });
-    
+
     it('performs a set intersection', function() {
       var b = containers.set().add(1, 2, 3);
       this.set.add(2, 3, 4);
       this.set.intersection(b);
-      expect(this.set.items().sort()).toEqual([2, 3])
+      expect(this.set.items().sort()).toEqual([2, 3]);
+
+      this.set.items([o1, o2, o3]);
+      b.items([o2, o3, o4]);
+      this.set.intersection(b);
+      expect(this.set.items().sort()).toEqual([o2, o3]);
     });
-    
+
     it('performs a set complement', function() {
       var b = containers.set().add(1, 2, 3);
       this.set.add(3, 4, 5);
       this.set.complement(b);
       expect(this.set.items().sort()).toEqual([4, 5]);
+
+      this.set.items([o1, o2, o3]);
+      b.items([o2, o3, o4]);
+      this.set.complement(b);
+      expect(this.set.items().sort()).toEqual([o1]);
     });
 
     it('performs a set difference', function() {
@@ -804,6 +817,11 @@ describe('Containers', function() {
       this.set.add(2, 3, 4);
       this.set.difference(b);
       expect(this.set.items().sort()).toEqual([1, 4]);
+
+      this.set.items([o1, o2, o3]);
+      b.items([o2, o3, o4]);
+      this.set.difference(b);
+      expect(this.set.items().sort()).toEqual([o1, o4]);
     });
   });
 });
