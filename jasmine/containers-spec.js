@@ -824,6 +824,33 @@ describe('Containers', function() {
       expect(this.set.items().sort()).toEqual([o1, o4]);
     });
   });
+
+  describe('Augmentation Pattern', function() {
+
+    it('can augment a container with a custom method', function() {
+      containers.set = (function(set) {
+        return function() {
+          var s = set();
+          s.type = function type() { return 'set'; };
+          return s;
+        };
+      })(containers.set);
+
+      var set = containers.set().add(1, 2, 3);
+      expect(set.size()).toEqual(3);
+      expect(set.has(1)).toBe(true);
+      expect(set.has(2)).toBe(true);
+      expect(set.has(3)).toBe(true);
+      expect(set.type()).toEqual('set');
+
+      set = containers.set();
+      expect(set.size()).toEqual(0);
+      expect(set.has(1)).toBe(false);
+      expect(set.has(2)).toBe(false);
+      expect(set.has(3)).toBe(false);
+      expect(set.type()).toEqual('set');
+    });
+  });
 });
 
 })(window.containers);
