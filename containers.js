@@ -74,11 +74,11 @@ containers.extend = function extend(name, extendObj) {
 // ---------------------------------------------------------------
 // Deque implementation used by containers bag, stack and queue.
 // ---------------------------------------------------------------
-containers.dequeImpl = 'dequeList';
+containers.dequeImpl = 'dequeArray';
 
 // ---------------------------------------------------------------
 // Deque - a double-ended queue (pronounced "deck").
-// Return the specified implementation (default: dequeList).
+// Return the specified implementation.
 // ---------------------------------------------------------------
 containers.deque = function deque() {
   var impl = containers[containers.dequeImpl];
@@ -676,6 +676,7 @@ containers.set = function set() {
   // Add one or more items to the set.
   add: function() {
     slice.call(arguments, 0).forEach(function(item) {
+      if (item === undefined) return;
       var k = key.call(item);
       if (st[k] === undefined) {
         st[k] = item;
