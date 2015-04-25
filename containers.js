@@ -8,10 +8,6 @@ var containers = ex.containers || (ex.containers = Object.create(null));
 // containers.js version.
 containers.version = '0.1';
 
-// Deque implementation used by other containers
-// bag, stack and queue.
-containers.dequeImpl = 'dequeList';
-
 // Shortcuts.
 
 var
@@ -57,7 +53,28 @@ encodeType = (function() {
   }
 })();
 
+// ---------------------------------------------------------------
+// Extend a container with properties in an object.
+// ---------------------------------------------------------------
+containers.extend = function extend(name, extendObj) {
+  containers[name] = (function(ctr) {
+    // This function will replace the one assigned to containers[name].
+    return function extended() {
+      var sourceObj = ctr(), k;
+      for (k in extendObj) {
+        if (extendObj.hasOwnProperty(k)) {
+          sourceObj[k] = extendObj[k];
+        }
+      }
+      return sourceObj;
+    };
+  })(containers[name]);
+};
 
+// ---------------------------------------------------------------
+// Deque implementation used by containers bag, stack and queue.
+// ---------------------------------------------------------------
+containers.dequeImpl = 'dequeList';
 
 // ---------------------------------------------------------------
 // Deque - a double-ended queue (pronounced "deck").
@@ -746,7 +763,7 @@ containers.set = function set() {
     return this;
   },
 
-  // a \ b (relative complement, a minus b)
+  // a \ b (relative complement of b in a, a minus b)
   complement: function(b) {
     b.each(function(item) {
       this.remove(item);
