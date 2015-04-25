@@ -10,6 +10,18 @@
 (function(containers) {
 'use strict'
 
+// Return a random number or an array of random numbers.
+function rand(min, max, count) {
+  var r , i;
+  if (count !== undefined) {
+    r = [];
+    for (i = 0; i < count; i++)
+      r.push(Math.floor(Math.random() * (max-min)) + min);
+    return r;
+  }
+  return Math.floor(Math.random() * (max-min)) + min;
+}
+
 containers.dequeImpl = 'dequeList'
 
 describe('Containers', function() {
@@ -115,6 +127,12 @@ describe('Containers', function() {
       expect(this.deque.popBack()).toEqual(null);
       expect(this.deque.popFront()).toEqual(null);
       expect(this.deque.size()).toEqual(0);
+    });
+
+    it('adds large arrays via items method', function() {
+      var size = 2E5
+      this.deque.items(rand(0, 100, size));
+      expect(this.deque.size()).toEqual(size);
     });
 
     it('properly removes arbitrary items from the queue', function() {
@@ -243,6 +261,12 @@ describe('Containers', function() {
       expect(this.deque.size()).toEqual(0);
     });
 
+    it('adds large arrays via items method', function() {
+      var size = 2E5
+      this.deque.items(rand(0, 100, size));
+      expect(this.deque.size()).toEqual(size);
+    });
+
     it('properly removes arbitrary items from the queue', function() {
       this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
       this.deque.remove(1, 3, 4, 7);
@@ -336,6 +360,12 @@ describe('Containers', function() {
       expect(this.bag.items()).toEqual([])
     });
 
+    it('adds large arrays via items method', function() {
+      var size = 2E5
+      this.bag.items(rand(0, 100, size));
+      expect(this.bag.size()).toEqual(size);
+    });
+
     it('returns "this" for all methods that don\'t return a value', function() {
       expect(this.bag.items([])).toBe(this.bag);
       expect(this.bag.add()).toBe(this.bag);
@@ -424,6 +454,12 @@ describe('Containers', function() {
       expect(this.stack.items()).toEqual([])
     });
 
+    xit('adds large arrays via items method (very slow with dequeArray)', function() {
+      var size = 2E5
+      this.stack.items(rand(0, 100, size));
+      expect(this.stack.size()).toEqual(size);
+    });
+
     it('returns "this" for all methods that don\'t return a value', function() {
       expect(this.stack.items([])).toBe(this.stack);
       expect(this.stack.push()).toBe(this.stack);
@@ -508,6 +544,12 @@ describe('Containers', function() {
       this.queue.clear();
       expect(this.queue.size()).toEqual(0);
       expect(this.queue.items()).toEqual([])
+    });
+
+    it('adds large arrays via items method', function() {
+      var size = 2E5
+      this.queue.items(rand(0, 100, size));
+      expect(this.queue.size()).toEqual(size);
     });
 
     it('returns "this" for all methods that don\'t return a value', function() {
@@ -621,6 +663,12 @@ describe('Containers', function() {
       expect(this.pq.next()).toBe(null);
       expect(this.pq.next()).toBe(null);
     });
+
+    it('adds large arrays via items method', function() {
+      var size = 2E5
+      this.pq.items(rand(0, 100, size));
+      expect(this.pq.size()).toEqual(size);
+    });
   });
 
 
@@ -721,7 +769,7 @@ describe('Containers', function() {
 
     it('iterates the set', function() {
       var items = [1, 2, 3],
-      keys = ['1:3', '2:3', '3:3'];
+      keys = ['(1:3)', '(2:3)', '(3:3)'];
       this.set.items(items);
       this.set.each(function(value, key) {
         expect(items.indexOf(value)).toBeGreaterThan(-1);
@@ -764,7 +812,7 @@ describe('Containers', function() {
 
     it('returns set keys in sorted order', function() {
       this.set.add(1, 4, 3, 2);
-      expect(this.set.keys()).toEqual(['1:3', '2:3', '3:3', '4:3']);
+      expect(this.set.keys()).toEqual(['(1:3)', '(2:3)', '(3:3)', '(4:3)']);
     });
 
     it('gets and sets an array of items', function() {
@@ -773,13 +821,29 @@ describe('Containers', function() {
       expect(this.set.items().sort()).toEqual([1, 2, 3])
     });
 
+    it('adds large arrays via items method', function() {
+      var size = 2E5
+      this.set.items(rand(0, 1, size));
+      expect(this.set.size()).toEqual(1);
+    });
+
     it('determines set equality', function() {
-      this.set.items(o1, o2, o3);
-      expect(this.set.equals(this.set)).toBe(true);
       var b = this.set.copy();
+      expect(this.set.equals(this.set)).toBe(true);
+      expect(b.equals(b)).toBe(true);
+      expect(this.set.equals(b)).toBe(true);
+      this.set.add(o1, o2, o3);
+      expect(this.set.equals(this.set)).toBe(true);
+      b = this.set.copy();
+      expect(b.equals(b)).toBe(true);
       expect(this.set.equals(b)).toBe(true);
       b.items([o1, o2, o4]);
       expect(this.set.equals(b)).toBe(false);
+      expect(b.equals(this.set)).toBe(false);
+      this.set.items([1, 2, 3]);
+      b.items([2, 3, 4]);
+      expect(this.set.equals(b)).toBe(false);
+      expect(b.equals(this.set)).toBe(false);
     });
 
     it('performs a set union', function() {
@@ -863,13 +927,6 @@ describe('Containers', function() {
 
   describe('Extend Method', function() {
     it('can augment a container with custom properties', function() {
-      // containers.set = (function(set) {
-      //   return function() {
-      //     var s = set();
-      //     s.type = function type() { return 'set'; };
-      //     return s;
-      //   };
-      // })(containers.set);
       containers.extend('set', {
         prop: 'prop',
         method: function() { return this.prop; },
