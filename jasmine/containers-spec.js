@@ -711,6 +711,12 @@ describe('Containers', function() {
       expect(this.set.has('a')).toBe(false);
       expect(this.set.has('b')).toBe(false);
       expect(this.set.has('c')).toBe(false);
+
+      this.set.items([0, null, undefined]);
+      expect(this.set.size()).toBe(2);
+      expect(this.set.has(0)).toBe(true);
+      expect(this.set.has(null)).toBe(true);
+      expect(this.set.has(undefined)).toBe(false);
     });
 
     it('iterates the set', function() {
@@ -825,13 +831,14 @@ describe('Containers', function() {
     });
   });
 
-  describe('Augmentation Pattern', function() {
+  describe('Manual Augmentation', function() {
 
-    it('can augment a container with a custom method', function() {
+    it('can augment a container with custom properties', function() {
       containers.set = (function(set) {
         return function() {
           var s = set();
-          s.type = function type() { return 'set'; };
+          s.prop = 'prop';
+          s.method = function() { return this.prop; };
           return s;
         };
       })(containers.set);
@@ -841,14 +848,47 @@ describe('Containers', function() {
       expect(set.has(1)).toBe(true);
       expect(set.has(2)).toBe(true);
       expect(set.has(3)).toBe(true);
-      expect(set.type()).toEqual('set');
+      expect(set.prop).toEqual('prop');
+      expect(set.method()).toEqual('prop');
 
       set = containers.set();
       expect(set.size()).toEqual(0);
       expect(set.has(1)).toBe(false);
       expect(set.has(2)).toBe(false);
       expect(set.has(3)).toBe(false);
-      expect(set.type()).toEqual('set');
+      expect(set.prop).toEqual('prop');
+      expect(set.method()).toEqual('prop');
+    });
+  });
+
+  describe('Extend Method', function() {
+    it('can augment a container with custom properties', function() {
+      // containers.set = (function(set) {
+      //   return function() {
+      //     var s = set();
+      //     s.type = function type() { return 'set'; };
+      //     return s;
+      //   };
+      // })(containers.set);
+      containers.extend('set', {
+        prop: 'prop',
+        method: function() { return this.prop; },
+      });
+      var set = containers.set().add(1, 2, 3);
+      expect(set.size()).toEqual(3);
+      expect(set.has(1)).toBe(true);
+      expect(set.has(2)).toBe(true);
+      expect(set.has(3)).toBe(true);
+      expect(set.prop).toEqual('prop');
+      expect(set.method()).toEqual('prop');
+
+      set = containers.set();
+      expect(set.size()).toEqual(0);
+      expect(set.has(1)).toBe(false);
+      expect(set.has(2)).toBe(false);
+      expect(set.has(3)).toBe(false);
+      expect(set.prop).toEqual('prop');
+      expect(set.method()).toEqual('prop');
     });
   });
 });
