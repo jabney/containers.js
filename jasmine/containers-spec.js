@@ -38,7 +38,7 @@ describe('Containers', function() {
       expect(this.deque.size()).toEqual(0);
     });
 
-    it('accurately reports the size of the queue', function() {
+    it('reports the size of the queue', function() {
       expect(this.deque.size()).toEqual(0);
       
       this.deque.pushBack(1, 2, 3);
@@ -57,7 +57,7 @@ describe('Containers', function() {
       expect(this.deque.size()).toEqual(0);
     });
 
-    it('correctly peeks at front and back of queue', function() {
+    it('peeks at front and back of queue', function() {
       this.deque.pushBack(1, 2, 3);
       expect(this.deque.peekFront()).toEqual(1);
       expect(this.deque.peekBack()).toEqual(3);
@@ -67,7 +67,7 @@ describe('Containers', function() {
       expect(this.deque.peekBack()).toBe(null);
     });
 
-    it('correctly clears the queue', function(){
+    it('clears the queue', function(){
       expect(this.deque.size()).toEqual(0);
 
       this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
@@ -80,7 +80,7 @@ describe('Containers', function() {
       expect(this.deque.peekBack()).toBe(null);
     });
 
-    it('correctly copies the queue', function() {
+    it('copies the queue', function() {
       var d2;
       this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
       d2 = this.deque.copy();
@@ -89,7 +89,7 @@ describe('Containers', function() {
       expect(this.deque.items()).toEqual(d2.items());
     });
 
-    it('can accurately report if the queue contains a specific item', function() {
+    it('reports if the queue contains a specific item', function() {
       this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
       expect(this.deque.has(0)).toBe(false);
       expect(this.deque.has(1)).toBe(true);
@@ -112,7 +112,7 @@ describe('Containers', function() {
       expect(this.deque.items()).toEqual([1, 2, 3, 4, 5, 6, 7]);
     });
 
-    it('properly pops items from front and back of queue', function() {
+    it('pops items from front and back of queue', function() {
       this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
 
       expect(this.deque.popFront()).toEqual(1);
@@ -135,7 +135,7 @@ describe('Containers', function() {
       expect(this.deque.size()).toEqual(size);
     });
 
-    it('properly removes arbitrary items from the queue', function() {
+    it('removes arbitrary items from the queue', function() {
       this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
       this.deque.remove(1, 3, 4, 7);
       expect(this.deque.has(1)).toBe(false);
@@ -170,7 +170,7 @@ describe('Containers', function() {
       expect(this.deque.size()).toEqual(0);
     });
 
-    it('accurately reports the size of the queue', function() {
+    it('reports the size of the queue', function() {
       expect(this.deque.size()).toEqual(0);
       
       this.deque.pushBack(1, 2, 3);
@@ -189,7 +189,7 @@ describe('Containers', function() {
       expect(this.deque.size()).toEqual(0);
     });
 
-    it('correctly peeks at front and back of queue', function() {
+    it('peeks at front and back of queue', function() {
       this.deque.pushBack(1, 2, 3);
       expect(this.deque.peekFront()).toEqual(1);
       expect(this.deque.peekBack()).toEqual(3);
@@ -199,7 +199,7 @@ describe('Containers', function() {
       expect(this.deque.peekBack()).toBe(null);
     });
 
-    it('correctly clears the queue', function(){
+    it('clears the queue', function(){
       expect(this.deque.size()).toEqual(0);
 
       this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
@@ -212,7 +212,7 @@ describe('Containers', function() {
       expect(this.deque.peekBack()).toBe(null);
     });
 
-    it('correctly copies the queue', function() {
+    it('copies the queue', function() {
       var d2;
       this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
       d2 = this.deque.copy();
@@ -221,7 +221,7 @@ describe('Containers', function() {
       expect(this.deque.items()).toEqual(d2.items());
     });
 
-    it('can accurately report if the queue contains a specific item', function() {
+    it('reports if the queue contains a specific item', function() {
       this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
       expect(this.deque.has(0)).toBe(false);
       expect(this.deque.has(1)).toBe(true);
@@ -244,7 +244,7 @@ describe('Containers', function() {
       expect(this.deque.items()).toEqual([1, 2, 3, 4, 5, 6, 7]);
     });
 
-    it('properly pops items from front and back of queue', function() {
+    it('pops items from front and back of queue', function() {
       this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
 
       expect(this.deque.popFront()).toEqual(1);
@@ -267,7 +267,7 @@ describe('Containers', function() {
       expect(this.deque.size()).toEqual(size);
     });
 
-    it('properly removes arbitrary items from the queue', function() {
+    it('removes arbitrary items from the queue', function() {
       this.deque.pushBack(1, 2, 3, 4, 5, 6, 7);
       this.deque.remove(1, 3, 4, 7);
       expect(this.deque.has(1)).toBe(false);
@@ -296,7 +296,7 @@ describe('Containers', function() {
       this.bag = containers.bag();
     });
 
-    it('accurately reports bag size', function() {
+    it('reports bag size', function() {
       expect(this.bag.size()).toEqual(0);
 
       this.bag.add(1);
@@ -346,13 +346,13 @@ describe('Containers', function() {
       });
     });
 
-    it('correctly copies the bag', function() {
+    it('copies the bag', function() {
       var b = this.bag.copy();
       expect(this.bag).not.toBe(b);
       expect(this.bag.items().sort()).toEqual(b.items().sort())
     });
 
-    it('correctly clears the bag', function() {
+    it('clears the bag', function() {
       this.bag.items([1, 2, 3, 4]);
       expect(this.bag.size()).toEqual(4);
       this.bag.clear();
@@ -381,7 +381,7 @@ describe('Containers', function() {
       this.stack = containers.stack();
     });
 
-    it('accurately reports stack size', function() {
+    it('reports stack size', function() {
       expect(this.stack.size()).toEqual(0);
 
       this.stack.push(1);
@@ -404,7 +404,7 @@ describe('Containers', function() {
       expect(this.stack.size()).toEqual(0);
     });
 
-    it('can correctly push and pop items', function() {
+    it('can push and pop items', function() {
       this.stack.push(1);
       expect(this.stack.size()).toEqual(1);
 
@@ -418,7 +418,7 @@ describe('Containers', function() {
       expect(this.stack.pop()).toBe(null);
     });
 
-    it('correctly peeks at the top of the stack', function() {
+    it('peeks at the top of the stack', function() {
       expect(this.stack.peek()).toBe(null);
       this.stack.push(1, 2, 3);
       expect(this.stack.peek()).toEqual(3);
@@ -439,14 +439,14 @@ describe('Containers', function() {
       });
     });
 
-    it('correctly copies the stack', function() {
+    it('copies the stack', function() {
       var b = this.stack.copy();
       expect(this.stack).not.toBe(b);
       expect(this.stack.items()).toEqual(b.items());
       expect(this.stack.size()).toEqual(b.size());
     });
 
-    it('correctly clears the stack', function() {
+    it('clears the stack', function() {
       this.stack.items([1, 2, 3, 4]);
       expect(this.stack.size()).toEqual(4);
       this.stack.clear();
@@ -474,7 +474,7 @@ describe('Containers', function() {
       this.queue = containers.queue();
     });
 
-    it('accurately reports queue size', function() {
+    it('reports queue size', function() {
       expect(this.queue.size()).toEqual(0);
 
       this.queue.enq(1);
@@ -497,7 +497,7 @@ describe('Containers', function() {
       expect(this.queue.size()).toEqual(0);
     });
 
-    it('can correctly enqueue and dequeue items', function() {
+    it('can enqueue and dequeue items', function() {
       this.queue.enq(1);
       expect(this.queue.size()).toEqual(1);
 
@@ -511,7 +511,7 @@ describe('Containers', function() {
       expect(this.queue.deq()).toBe(null);
     });
 
-    it('correctly peeks at the top of the queue', function() {
+    it('peeks at the top of the queue', function() {
       expect(this.queue.peek()).toBe(null);
       this.queue.enq(1, 2, 3);
       expect(this.queue.peek()).toEqual(1);
@@ -531,14 +531,14 @@ describe('Containers', function() {
       });
     });
 
-    it('correctly copies the queue', function() {
+    it('copies the queue', function() {
       var b = this.queue.copy();
       expect(this.queue).not.toBe(b);
       expect(this.queue.items()).toEqual(b.items());
       expect(this.queue.size()).toEqual(b.size());
     });
 
-    it('correctly clears the queue', function() {
+    it('clears the queue', function() {
       this.queue.items([1, 2, 3, 4]);
       expect(this.queue.size()).toEqual(4);
       this.queue.clear();
