@@ -74,7 +74,7 @@ containers.extend = function extend(name, extendObj) {
 // ---------------------------------------------------------------
 // Deque implementation used by containers bag, stack and queue.
 // ---------------------------------------------------------------
-containers.dequeImpl = 'dequeArray';
+containers.dequeImpl = 'dequeList';
 
 // ---------------------------------------------------------------
 // Deque - a double-ended queue (pronounced "deck").
@@ -99,7 +99,10 @@ containers.dequeList = function dequeList() {
     if (!arguments.length)
       return getItems(this.forwardIterator);
     this.clear();
-    return this.pushBack.apply(this, items);
+    items.forEach(function(item) {
+      this.pushBack(item);
+    }, this);
+    return this;
   },
 
   // Add one or more items to the front of the queue. O(k)
@@ -393,7 +396,9 @@ containers.bag = function bag() {
     if (!arguments.length)
       return deque.items();
     deque.clear();
-    deque.pushBack.apply(deque, items);
+    items.forEach(function(item) {
+      this.add(item);
+    }, this);
     return this;
   },
 
@@ -448,7 +453,9 @@ containers.stack = function stack() {
     if (!arguments.length)
       return deque.items();
     deque.clear();
-    deque.pushFront.apply(deque, items);
+    items.forEach(function(item) {
+      deque.pushFront(item);
+    }, this);
     return this;
   },
 
@@ -500,7 +507,9 @@ containers.queue = function queue() {
     if (!arguments.length)
       return deque.items();
     deque.clear();
-    deque.pushBack.apply(deque, items);
+    items.forEach(function(item) {
+      deque.pushBack(item);
+    });
     return this;
   },
 
@@ -563,7 +572,10 @@ containers.priorityQueue = function priorityQueue() {
     if (!arguments.length)
       return heap.slice(0, heap.length);
     this.clear();
-    return this.insert.apply(this, items);
+    items.forEach(function(item) {
+      this.insert(item);
+    }, this);
+    return this;
   },
 
   // Add one or more items to the priority queue.
@@ -647,7 +659,7 @@ containers.set = function set() {
 
   // The default key function for items added to the set.
   key = function() {
-    return ''.concat(this, ':', encodeType(this));
+    return ''.concat('(', this, ':', encodeType(this), ')');
   };
 
   return {
@@ -665,7 +677,10 @@ containers.set = function set() {
     if (!arguments.length)
       return getItems(this.each);
     this.clear();
-    return this.add.apply(this, items);
+    items.forEach(function(item) {
+      this.add(item);
+    }, this);
+    return this;
   },
 
   // Return an array of this set's keys.
@@ -734,15 +749,16 @@ containers.set = function set() {
 
   // Return true if b is equal to this set.
   equals: function(b) {
+    var eq = true;
     if (this !== b) {
       // Sets should be the same size.
       if (this.size() !== b.size())
         return false;
       // Sets should have the same items.
       this.each(function(item) {
-        if (!b.has(item))
-          return false;
+        eq = eq && b.has(item);
       });
+      return eq;
     }
     return true;
   },
