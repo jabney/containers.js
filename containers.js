@@ -293,7 +293,7 @@ containers.dequeArray = function dequeArray() {
   items: function(items) {
     if (!arguments.length)
       return array.slice(0, array.length);
-    array = items;
+    array = items.slice(0, items.length);
     return this;
   },
 
