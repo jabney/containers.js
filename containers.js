@@ -6,7 +6,7 @@
 var containers = ex.containers || (ex.containers = Object.create(null));
 
 // containers.js version.
-containers.version = '0.1';
+containers.version = '0.1.1';
 
 // Shortcuts.
 
@@ -54,7 +54,7 @@ encodeType = (function() {
 })();
 
 // ---------------------------------------------------------------
-// Extend a container with properties in an object.
+// Extend a container with properties in an object literal.
 // ---------------------------------------------------------------
 containers.extend = function extend(name, extendObj) {
   containers[name] = (function(ctr) {
@@ -451,25 +451,25 @@ containers.stack = function stack() {
   // Set or get an array of items for this stack.
   items: function(items) {
     if (!arguments.length)
-      return deque.items();
+      return deque.items().reverse();
     deque.clear();
     items.forEach(function(item) {
-      deque.pushFront(item);
+      deque.pushBack(item);
     }, this);
     return this;
   },
 
   // Push one or more items onto the stack.
   push: function() {
-    deque.pushFront.apply(deque, arguments);
+    deque.pushBack.apply(deque, arguments);
     return this;
   },
 
   // Pop an item off of the stack.
-  pop: deque.popFront,
+  pop: deque.popBack,
 
   // Return the top item without modifying the stack.
-  peek: deque.peekFront,
+  peek: deque.peekBack,
 
   // Return a copy of this stack.
   copy: function() {
@@ -484,7 +484,7 @@ containers.stack = function stack() {
 
   // Iterate over items on the stack.
   each: function(action, context) {
-    deque.forwardIterator(action, context);
+    deque.reverseIterator(action, context);
     return this;
   },
 
@@ -763,7 +763,7 @@ containers.set = function set() {
     return true;
   },
 
-  // a ∪ b
+  // a ∪ b (elements of b added to a)
   union: function(b) {
     b.each(function(item) {
       this.add(item);
@@ -771,7 +771,7 @@ containers.set = function set() {
     return this;
   },
 
-  // a ∩ b
+  // a ∩ b (elements common to both a and b)
   intersection: function(b) {
     this.each(function(item) {
       if (!b.has(item))
