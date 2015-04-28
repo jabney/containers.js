@@ -74,7 +74,7 @@ containers.extend = function extend(name, extendObj) {
 // ---------------------------------------------------------------
 // Deque implementation used by containers bag, stack and queue.
 // ---------------------------------------------------------------
-containers.dequeImpl = 'dequeList';
+containers.dequeImpl = 'dequeArray';
 
 // ---------------------------------------------------------------
 // Deque - a double-ended queue (pronounced "deck").
@@ -397,8 +397,8 @@ containers.bag = function bag() {
       return deque.items();
     deque.clear();
     items.forEach(function(item) {
-      this.add(item);
-    }, this);
+      deque.pushBack(item);
+    });
     return this;
   },
 
@@ -455,7 +455,7 @@ containers.stack = function stack() {
     deque.clear();
     items.forEach(function(item) {
       deque.pushBack(item);
-    }, this);
+    });
     return this;
   },
 
