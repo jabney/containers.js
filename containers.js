@@ -1,4 +1,13 @@
-// containers.js MIT License © 2015 James Abney http://github.com/jabney
+/*
+  containers.js
+  MIT License © 2015 James Abney
+  http://github.com/jabney
+
+  Containers: bag, stack, queue, double-ended queue (deque),
+  priorityQueue, and set.
+
+  See documentation at http://github.com/jabney/containers.js
+*/
 (function(ex, undefined) {
 'use strict';
 
