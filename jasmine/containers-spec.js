@@ -7,7 +7,7 @@
 */
 
 (function(containers) {
-'use strict'
+'use strict';
 
 // Return a random number or an array of random numbers.
 function rand(min, max, count) {
@@ -897,11 +897,13 @@ describe('Containers', function() {
   describe('Manual Augmentation', function() {
 
     it('can augment a container with custom properties', function() {
+      var oldSet = containers.set;
+
       containers.set = (function(set) {
         return function() {
           var s = set();
-          s.prop = 'prop';
-          s.method = function() { return this.prop; };
+          s.prop1 = 'prop';
+          s.method1 = function() { return this.prop1; };
           return s;
         };
       })(containers.set);
@@ -911,40 +913,46 @@ describe('Containers', function() {
       expect(set.has(1)).toBe(true);
       expect(set.has(2)).toBe(true);
       expect(set.has(3)).toBe(true);
-      expect(set.prop).toEqual('prop');
-      expect(set.method()).toEqual('prop');
+      expect(set.prop1).toEqual('prop');
+      expect(set.method1()).toEqual('prop');
 
       set = containers.set();
       expect(set.size()).toEqual(0);
       expect(set.has(1)).toBe(false);
       expect(set.has(2)).toBe(false);
       expect(set.has(3)).toBe(false);
-      expect(set.prop).toEqual('prop');
-      expect(set.method()).toEqual('prop');
+      expect(set.prop1).toEqual('prop');
+      expect(set.method1()).toEqual('prop');
+
+      containers.set = oldSet;
     });
   });
 
   describe('Extend Method', function() {
     it('can augment a container with custom properties', function() {
-      containers.extend('set', {
-        prop: 'prop',
-        method: function() { return this.prop; },
+      var oldSet = containers.set;
+
+      containers.set = containers.extend(containers.set, {
+        prop2: 'prop',
+        method2: function() { return this.prop2; },
       });
       var set = containers.set().add(1, 2, 3);
       expect(set.size()).toEqual(3);
       expect(set.has(1)).toBe(true);
       expect(set.has(2)).toBe(true);
       expect(set.has(3)).toBe(true);
-      expect(set.prop).toEqual('prop');
-      expect(set.method()).toEqual('prop');
+      expect(set.prop2).toEqual('prop');
+      expect(set.method2()).toEqual('prop');
 
       set = containers.set();
       expect(set.size()).toEqual(0);
       expect(set.has(1)).toBe(false);
       expect(set.has(2)).toBe(false);
       expect(set.has(3)).toBe(false);
-      expect(set.prop).toEqual('prop');
-      expect(set.method()).toEqual('prop');
+      expect(set.prop2).toEqual('prop');
+      expect(set.method2()).toEqual('prop');
+
+      containers.set = oldSet;
     });
   });
 });
