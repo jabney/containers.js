@@ -6,7 +6,7 @@
   Author: James Abney
 */
 (function() {
-'use strict'
+'use strict';
 
 var
 data1e4 = rand(0, 100, 1e4),
