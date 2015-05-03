@@ -65,20 +65,17 @@ encodeType = (function() {
 // ---------------------------------------------------------------
 // Extend a container with properties in an object literal.
 // ---------------------------------------------------------------
-containers.extend = function extend(name, extendObj) {
-  containers[name] = (function(ctr) {
-    // This function will replace the one assigned to containers[name].
-    return function extended() {
-      var sourceObj = ctr(), k;
-      for (k in extendObj) {
-        if (extendObj.hasOwnProperty(k)) {
-          sourceObj[k] = extendObj[k];
-        }
-      }
-      return sourceObj;
-    };
-  })(containers[name]);
+containers.extend = function extend(factory, extendObj) {
+  return function extended() {
+    var k, fac = factory.apply(null, arguments);
+    for (k in extendObj) {
+      if (extendObj.hasOwnProperty(k))
+        fac[k] = extendObj[k];
+    }
+    return fac;
+  }
 };
+
 
 // ---------------------------------------------------------------
 // Deque implementation used by containers bag, stack and queue.
