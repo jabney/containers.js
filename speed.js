@@ -6,10 +6,11 @@
   Author: James Abney
 */
 (function() {
+'use strict'
 
 var
-data1e4 = rand(0, 100, 1e4)
-data1e5 = rand(0, 100, 1e5)
+data1e4 = rand(0, 100, 1e4),
+data1e5 = rand(0, 100, 1e5),
 data12e5 = rand(0, 100, 1.2e5)
 ;
 
