@@ -4,7 +4,6 @@
   Unit tests for containers.js
 
   Author: James Abney
-  Date:  02-Apr-2015
 */
 
 (function(containers) {
