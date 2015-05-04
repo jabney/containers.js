@@ -42,10 +42,10 @@ bag.each(function(item) {
 
 There are two implementations of `deque`: `dequeArray`, which uses a JavaScript array as a backing object, and `dequeList` which uses a linked list. The default is `dequeArray`. In almost all cases, `dequeArray` is faster (although the cost for either is fairly trivial). However, in rare cases with a `queue`, such as when the queue might contain more than 100,000 items, `dequeArray` can exhibit quadratic performance characteristics and become prohibitively slow. In these cases it's highly advantageous to use `dequeList`, as it can add and remove items from either end of its queue in constant time.
 
-**Note:** calling `containers.deque()` will return an instance of the currently specified deque implementation: `dequeArray` by default, or `dequeList` if it's been configured.
+**Note:** calling `containers.deque()` will return an instance of the currently specified deque implementation: `dequeArray` by default, or `dequeList` if it's been configured. After `containers.dequeImpl` is set, any subsequent calls to `deque` or `queue`, `stack`, and `bag`, will use the deque implementation specified in `containers.dequeImpl`.
 
 ```javascript
-// Set the implementation of deque to be dequeArray (default).
+// Set the implementation of deque to dequeArray (default).
 containers.dequeImpl = 'dequeArray';
 
 // Return an instance of dequeArray.
