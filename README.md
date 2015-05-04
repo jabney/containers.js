@@ -51,11 +51,21 @@ containers.dequeImpl = 'dequeArray';
 // Return an instance of dequeArray.
 var deque = containers.deque();
 
+// Return an instance of queue which uses the dequeArray implementation.
+var queue = containers.queue();
+
+// ...
+
 // Set the deque implementation to dequeList.
 containers.dequeImpl = 'dequeList'
 
 // Return an instance of dequeList.
 deque = containers.deque();
+
+// Return an instance of queue which uses the dequeList implementation.
+var queue = containers.queue();
+
+// ...
 
 // Create a custom deque implementation.
 containers.myDequeImpl = function() { ... };
@@ -65,6 +75,10 @@ containers.dequeImpl = myDequeImpl;
 
 // Return an instance of myDequeImpl.
 deque = containers.deque(); 
+
+// Return an instance of queue which uses the myDequeImpl implementation.
+var queue = containers.queue();
+
 ```
 
 
