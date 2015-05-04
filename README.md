@@ -18,9 +18,13 @@ Each container supports adding, removing, and iterating items, as well as: copyi
 ##Usage
 
 Load the script.
-`<script type="text/javascript" src="containers.js"></script>`
+
+```html
+<script type="text/javascript" src="containers.js"></script>
+```
 
 Create a container.
+
 ```javascript
 var bag = containers.bag();
 
