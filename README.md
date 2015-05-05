@@ -15,6 +15,10 @@ Use `set` when you want to store unique items and perform set operations on them
 
 Each container supports adding, removing, and iterating items, as well as: copying the container; querying its size; clearing the container of its contents; and returning an array of the container's items.
 
+Contents
++ [Usage](#usage)
++ [About Deque](#about-deque)
+
 ##Usage
 
 Load the script.
