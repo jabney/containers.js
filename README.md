@@ -17,7 +17,15 @@ Each container supports adding, removing, and iterating items, as well as: copyi
 
 Contents
 + [Usage](#usage)
-+ [About Deque](#about-deque)
++ [About Deque's Role](#about-deque)
++ [Container Interfaces](#container-interfaces)
+  + [Stack](#stack)
+  + [Queue](#queue)
+  + [Bag](#bag)
+  + [Deque](#deque)
+  + [Priority Queue](#priority-queue)
+  + [Set](#set)
++ [Augmenting a Container](#augmenting-a-container)
 
 ##Usage
 
@@ -43,7 +51,7 @@ bag.each(function(item) {
 
 **Note:** while the various container interfaces have common names in most cases (such as `copy`, `size` and `clear`) the methods for adding and removing items are specific to the container. For instance, the `stack` container uses the traditional `push` and `pop` methods, while the `queue` container uses `enq` and `deq`. Bag uses `add` and `remove`, and `deque` uses `pushFront`, `popFront`, `pushBack` and `popBack`.
 
-##About `deque`
+##About `deque`'s Role.
 `deque` is the backing object for the containers `bag`, `stack`, and `queue`. In their implementations, each of these containers uses a `deque` object to do the heavy lifting. 
 
 There are two implementations of `deque`: `dequeArray`, which uses a JavaScript array as a backing object, and `dequeList` which uses a linked list. The default is `dequeArray`. In almost all cases, `dequeArray` is faster (although the cost for either is fairly trivial). However, in rare circumstances with a `queue`, such as when the queue might contain more than 100,000 items, `dequeArray` can exhibit quadratic performance characteristics for filling and draining the queue, and become prohibitively slow in this circumstance. In this case it's highly advantageous to use `dequeList`, as it can add and remove items from either end of its queue in constant time.
@@ -90,7 +98,20 @@ var queue = containers.queue();
 
 **Note:** the unit test file, `unit.html`, incorporates some speed tests showing the potential heavy cost of `queue` with `dequeArray` (see the console when running unit tests). On one machine under Google Chrome, `queue` using `dequeArray` took several seconds to process a queue with 120,000 items, where `dequeList` only took a fraction of a second for the same tasks. This stands in stark contrast with a queue of size 100,000 on the same machine and with the same browser, where `dequeArray` outperformed `dequeList` significantly. This margin may vary starkly on different machines, and particularly with different browsers. Since queues of this size are usually corner cases, it's probably better to stick with `dequeArray` in most situations, unless guaranteed constant-time performance for adds and removes is preferred over a general, per-operation increase in performance (this only applies to `deque`, `bag`*, `stack`, and `queue`).
 
-`*bag.remove()` is based on `deque.remove()` and is a linear-time operation, as it removes a specific item from the list after searching to find it. This differs from `deque.popFront()` and `deque.popBack()`, which are both constant-time operations when `containers.dequeImpl` is set to `dequeList`. `bag.add()` is a constant-time operation regardless of whether `containers.dequeImpl` is set to `dequeArray` or `dequeList`. (`bag.remove()` was provided for convenience. If your use case requires a container that can add and remove a lot of items fast, `bag` may not be the best choice.)
+`*bag.remove()` is based on `deque.remove()` and is a linear-time operation, as it removes a specific item from the list after searching to find it. This differs from `deque.popFront()` and `deque.popBack()`, which are both constant-time operations when `containers.dequeImpl` is set to `dequeList`. `bag.add()` is a constant-time operation regardless of whether `containers.dequeImpl` is set to `dequeArray` or `dequeList`. (`bag.remove()` was provided for convenience. If your use case requires a container that can add and remove a lot of items fast, `bag` may not be the best choice. `bag` can add and iterate items quickly, using either of the included deque implementations, but removing a single item is a linear-time operation, and removing all items from a bag is quadratic.)
 
+##Container Interfaces
+###Stack
 
+###Queue
+
+###Bag
+
+###Deque
+
+###Priority Queue
+
+###Set
+
+##Augmenting a Container
 
