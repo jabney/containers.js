@@ -101,7 +101,47 @@ var queue = containers.queue();
 `*bag.remove()` is based on `deque.remove()` and is a linear-time operation, as it removes a specific item from the list after searching to find it. This differs from `deque.popFront()` and `deque.popBack()`, which are both constant-time operations when `containers.dequeImpl` is set to `dequeList`. `bag.add()` is a constant-time operation regardless of whether `containers.dequeImpl` is set to `dequeArray` or `dequeList`. (`bag.remove()` was provided for convenience. If your use case requires a container that can add and remove a lot of items fast, `bag` may not be the best choice. `bag` can add and iterate items quickly, using either of the included deque implementations, but removing a single item is a linear-time operation, and removing all items from a bag is quadratic.)
 
 ##Container Interfaces
+
+Here each of the container interfaces are described in detail. While many interface methods are similar amongst containers, some are different. This applies particularly to methods for adding and removing items. 
+
 ###Stack
+
+```javascript
+# Create a stack.
+var stack = containers.stack();
+
+# Add some items.
+stack.push(1, 2, 3);
+
+# Query the number of items on the stack.
+stack.size(); // => 3
+
+# Examine the top of the stack.
+stack.peek(); // => 3
+
+# Iterate the stack in stack order.
+stack.each(function(item) {
+  console.log(item); // 3, 2, 1
+});
+
+# Copy the stack.
+var newStack = stack.copy();
+
+# Return a list of stack-ordered items.
+stack.items(); // => [3, 2, 1]
+
+# Clear the stack.
+stack.clear();
+stack.size(); // => 0
+
+# Use an array to populate the stack.
+stack.items([4, 5, 6]);
+stack.size(); // => 3
+
+# Remove the items in stack order.
+while(stack.size())
+  stack.pop(); // 6, 5, 4
+```
 
 ###Queue
 
