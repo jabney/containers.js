@@ -207,7 +207,7 @@ bag.size(); // => 4
 
 // Iterate the bag.
 bag.each(function(item) {
-  console.log(item); // 1, 2, 3, 4 (unordered)
+  console.log(item); // 1, 2, 3, 4 (order not guaranteed)
 });
 
 // Copy the bag.
@@ -215,7 +215,11 @@ var newbag = bag.copy();
 newbag.size(); // => 4
 
 // Return a list of items.
-bag.items(); // => [1, 2, 3, 4] (unordered)
+bag.items(); // => [1, 2, 3, 4] (order not guaranteed)
+
+// Check if the bag contains an item.
+bag.has(4); // => true
+bag.has(5); // => false
 
 // Clear the bag.
 bag.clear();
@@ -228,6 +232,9 @@ bag.size(); // => 3
 // Remove an item.
 bag.remove(6); // 5, 7
 
+// Remove multiple items.
+bag.remove(5, 7);
+bag.size(); // => 0
 ```
 
 ###Deque
@@ -238,3 +245,44 @@ bag.remove(6); // 5, 7
 
 ##Augmenting a Container
 
+`containers.js` has a built-in augmentation method, `extend`. By calling `extend` with a container and an extend object specified, methods and other properties can be added to a container. 
+
+```javascript
+
+// Augment the original container.
+containers.stack = containers.extend(containers.stack, {
+  type: 'stack',
+  has: function(item) {
+    var items = this.items(), size = this.size(), i;
+    for (i = 0; i < size; i++)
+      if (items[i] === item)
+        return true;
+    return false;
+  }
+});
+
+// Try out the new method.
+var stack = containers.stack();
+stack.push(1, 2, 3);
+stack.has(1); // => true
+stack.has(4); // => false
+
+// Create an augmented container and leave the original one unchanged.
+var myStack = containers.extend(containers.stack, {
+  type: 'stack',
+  has: function(item) {
+    var items = this.items(), size = this.size(), i;
+    for (i = 0; i < size; i++)
+      if (items[i] === item)
+        return true;
+    return false;
+  }
+});
+
+// Try out the new method.
+var stack = myStack();
+stack.push(1, 2, 3);
+stack.has(1); // => true
+stack.has(4); // => false
+
+```
