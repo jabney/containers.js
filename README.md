@@ -102,7 +102,7 @@ var queue = containers.queue();
 
 ##Container Interfaces
 
-Here each of the container interfaces are described in detail. While many interface methods are similar amongst containers, some are different. This applies particularly to methods for adding and removing items. 
+Here each of the container interfaces are demonstrated in detail. While many interface methods are similar amongst containers, some are different. This applies particularly to methods for adding and removing items. 
 
 ###Stack
 
@@ -110,42 +110,125 @@ Here each of the container interfaces are described in detail. While many interf
 # Create a stack.
 var stack = containers.stack();
 
-# Add some items.
-stack.push(1, 2, 3);
+// Add one item.
+stack.push(1);
 
-# Query the number of items on the stack.
-stack.size(); // => 3
+// Add multiple items.
+stack.push(2, 3, 4);
 
-# Examine the top of the stack.
-stack.peek(); // => 3
+// Query the number of items on the stack.
+stack.size(); // => 4
 
-# Iterate the stack in stack order.
+// Examine the top of the stack.
+stack.peek(); // => 4
+
+// Iterate the stack in stack order.
 stack.each(function(item) {
-  console.log(item); // 3, 2, 1
+  console.log(item); // 4, 3, 2, 1
 });
 
-# Copy the stack.
+// Copy the stack.
 var newStack = stack.copy();
+newStack.size(); // => 4
 
-# Return a list of stack-ordered items.
-stack.items(); // => [3, 2, 1]
+// Return a list of stack-ordered items.
+stack.items(); // => [4, 3, 2, 1]
 
-# Clear the stack.
+// Clear the stack.
 stack.clear();
 stack.size(); // => 0
 
-# Use an array to populate the stack.
-stack.items([4, 5, 6]);
+// Use an array to populate the stack.
+stack.items([5, 6, 7]);
 stack.size(); // => 3
 
-# Remove the items in stack order.
+// Remove the items in stack order.
 while(stack.size())
-  stack.pop(); // 6, 5, 4
+  stack.pop(); // 7, 6, 5
 ```
 
 ###Queue
 
+```javascript
+// Create a queue.
+var queue = containers.queue();
+
+// Add one item.
+queue.enq(1);
+
+// Add multiple items.
+queue.enq(2, 3, 4);
+
+// Query the number of items on the queue.
+queue.size(); // => 4
+
+// Examine the top of the queue.
+queue.peek(); // => 1
+
+// Iterate the queue in queue order.
+queue.each(function(item) {
+  console.log(item); // 1, 2, 3, 4
+});
+
+// Copy the queue.
+var newQueue = queue.copy();
+newQueue.size(); // => 4
+
+// Return a list of queue-ordered items.
+queue.items(); // => [1, 2, 3, 4]
+
+// Clear the queue.
+queue.clear();
+queue.size(); // => 0
+
+// Use an array to populate the queue.
+queue.items([5, 6, 7]);
+queue.size(); // => 3
+
+// Remove the items in queue order.
+while(queue.size())
+  queue.deq(); // 5, 6, 7
+```
+
 ###Bag
+
+```javascript
+// Create a bag.
+var bag = containers.bag();
+
+// Add one item.
+bag.add(1);
+
+// Add multiple items.
+bag.add(2, 3, 4);
+
+// Query the number of items on the bag.
+bag.size(); // => 4
+
+// Iterate the bag.
+bag.each(function(item) {
+  console.log(item); // 1, 2, 3, 4 (unordered)
+});
+
+// Copy the bag.
+var newbag = bag.copy();
+newbag.size(); // => 4
+
+// Return a list of items.
+bag.items(); // => [1, 2, 3, 4] (unordered)
+
+// Clear the bag.
+bag.clear();
+bag.size(); // => 0
+
+// Use an array to populate the bag.
+bag.items([5, 6, 7]);
+bag.size(); // => 3
+
+// Remove an item.
+bag.remove(6); // 5, 7
+
+```
 
 ###Deque
 
