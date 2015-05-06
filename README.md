@@ -26,6 +26,8 @@ Contents
   + [Priority Queue](#priority-queue)
   + [Set](#set)
 + [Augmenting a Container](#augmenting-a-container)
+  + [Augment the original container](#augment-the-original-container)
+  + [Create a separate augmented container](#create-a-separate-augmented-container)
 
 ##Usage
 
