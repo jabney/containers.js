@@ -104,45 +104,49 @@ var queue = containers.queue();
 
 Here each of the container interfaces are demonstrated in detail. While many interface methods are similar amongst containers, some are different. This applies particularly to methods for adding and removing items. 
 
+Run-time complexity, where guaranteed, is noted using big-O notation. `O(1)` denotes constant time operations; `O(n)` indicates linear time based on the number of items in the container; and `O(k)` signifies linear time based on the number of arguments passed (or the size of the given array where applicable). O(?) denotes run-time complexity that is most-likey deque implementation dependant. 
+
 ###Stack
+
+This container adds and removes items via `push` and `pop`. The `pop` method will always remove and return the most recent item added via `push`. 
 
 ```javascript
 # Create a stack.
 var stack = containers.stack();
 
-// Add one item.
-stack.push(1);
+// Add one item. O(1)
+stack.push(1); 
 
-// Add multiple items.
+// Add multiple items. O(k)
 stack.push(2, 3, 4);
 
-// Query the number of items on the stack.
+// Query the number of items on the stack. O(1)
 stack.size(); // => 4
 
-// Examine the top of the stack.
+// Examine the top of the stack. O(1)
 stack.peek(); // => 4
 
-// Iterate the stack in stack order.
+// Iterate the stack in stack order. O(n)
 stack.each(function(item) {
   console.log(item); // 4, 3, 2, 1
 });
 
-// Copy the stack.
+// Copy the stack. O(n)
 var newStack = stack.copy();
 newStack.size(); // => 4
 
-// Return a list of stack-ordered items.
+// Return a list of stack-ordered items. O(n)
 stack.items(); // => [4, 3, 2, 1]
 
-// Clear the stack.
+// Clear the stack. O(1)
 stack.clear();
 stack.size(); // => 0
 
-// Use an array to populate the stack.
+// Use an array to populate the stack. O(k)
 stack.items([5, 6, 7]);
 stack.size(); // => 3
 
-// Remove the items in stack order.
+// Remove the items in stack order. O(1) per operation
 while(stack.size())
   stack.pop(); // 7, 6, 5
 ```
@@ -153,39 +157,39 @@ while(stack.size())
 // Create a queue.
 var queue = containers.queue();
 
-// Add one item.
+// Add one item. O(1)
 queue.enq(1);
 
-// Add multiple items.
+// Add multiple items. O(k)
 queue.enq(2, 3, 4);
 
-// Query the number of items on the queue.
+// Query the number of items on the queue. O(1)
 queue.size(); // => 4
 
-// Examine the top of the queue.
+// Examine the top of the queue. O(1)
 queue.peek(); // => 1
 
-// Iterate the queue in queue order.
+// Iterate the queue in queue order. O(n)
 queue.each(function(item) {
   console.log(item); // 1, 2, 3, 4
 });
 
-// Copy the queue.
+// Copy the queue. O(n)
 var newQueue = queue.copy();
 newQueue.size(); // => 4
 
-// Return a list of queue-ordered items.
+// Return a list of queue-ordered items. O(n)
 queue.items(); // => [1, 2, 3, 4]
 
-// Clear the queue.
+// Clear the queue. O(1)
 queue.clear();
 queue.size(); // => 0
 
-// Use an array to populate the queue.
+// Use an array to populate the queue. O(k)
 queue.items([5, 6, 7]);
 queue.size(); // => 3
 
-// Remove the items in queue order.
+// Remove the items in queue order. O(?)
 while(queue.size())
   queue.deq(); // 5, 6, 7
 ```
@@ -196,43 +200,43 @@ while(queue.size())
 // Create a bag.
 var bag = containers.bag();
 
-// Add one item.
+// Add one item. O(1)
 bag.add(1);
 
-// Add multiple items.
+// Add multiple items. O(k)
 bag.add(2, 3, 4);
 
-// Query the number of items on the bag.
+// Query the number of items on the bag. O(1)
 bag.size(); // => 4
 
-// Iterate the bag.
+// Iterate the bag. O(n)
 bag.each(function(item) {
   console.log(item); // 1, 2, 3, 4 (order not guaranteed)
 });
 
-// Copy the bag.
+// Copy the bag. O(n)
 var newbag = bag.copy();
 newbag.size(); // => 4
 
-// Return a list of items.
+// Return a list of items. O(n)
 bag.items(); // => [1, 2, 3, 4] (order not guaranteed)
 
-// Check if the bag contains an item.
+// Check if the bag contains an item. O(n)
 bag.has(4); // => true
 bag.has(5); // => false
 
-// Clear the bag.
+// Clear the bag. O(1)
 bag.clear();
 bag.size(); // => 0
 
-// Use an array to populate the bag.
+// Use an array to populate the bag. O(k)
 bag.items([5, 6, 7]);
 bag.size(); // => 3
 
-// Remove an item.
+// Remove an item. O(n)
 bag.remove(6); // 5, 7
 
-// Remove multiple items.
+// Remove multiple items. O(kn)
 bag.remove(5, 7);
 bag.size(); // => 0
 ```
@@ -245,17 +249,18 @@ bag.size(); // => 0
 
 ##Augmenting a Container
 
-`containers.js` has a built-in augmentation method, `extend`. By calling `extend` with a container and an extend object specified, methods and other properties can be added to a container. 
+`containers.js` has a built-in augmentation method, `extend`. By calling `extend` with a container and an object literal specified, methods and other properties can be added to a container. 
+
+###Augment the original container
 
 ```javascript
 
 // Augment the original container.
 containers.stack = containers.extend(containers.stack, {
-  type: 'stack',
   has: function(item) {
     var items = this.items(), size = this.size(), i;
     for (i = 0; i < size; i++)
-      if (items[i] === item)
+      if (item === items[i])
         return true;
     return false;
   }
@@ -266,14 +271,17 @@ var stack = containers.stack();
 stack.push(1, 2, 3);
 stack.has(1); // => true
 stack.has(4); // => false
+```
 
+### Create a separate augmented container
+
+```javascript
 // Create an augmented container and leave the original one unchanged.
 var myStack = containers.extend(containers.stack, {
-  type: 'stack',
   has: function(item) {
     var items = this.items(), size = this.size(), i;
     for (i = 0; i < size; i++)
-      if (items[i] === item)
+      if (item === items[i])
         return true;
     return false;
   }
