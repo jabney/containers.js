@@ -780,6 +780,7 @@ describe('Containers', function() {
       this.set.add(6, 4, 2);
       var b = this.set.copy();
       expect(this.set).not.toBe(b);
+      expect(this.set.items().sort()).toEqual([2, 4, 6]);
       expect(this.set.keys()).toEqual(b.keys());
     });
 
@@ -935,7 +936,7 @@ describe('Containers', function() {
       containers.set = containers.extend(containers.set, {
         prop2: 'prop',
         method2: function() { return this.prop2; },
-      });
+      }); 
       var set = containers.set().add(1, 2, 3);
       expect(set.size()).toEqual(3);
       expect(set.has(1)).toBe(true);
