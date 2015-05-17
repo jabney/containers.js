@@ -22,9 +22,9 @@ Contents
   + [Stack](#stack)
   + [Queue](#queue)
   + [Bag](#bag)
-  + [Deque](#deque)
   + [Priority Queue](#priority-queue)
   + [Set](#set)
+  + [Deque](#deque)
 + [Extending a Container](#extending-a-container)
   + [Extending with Augmentation](#extending-with-augmentation)
   + [Extending with Inheritance](#extending-with-inheritance)
@@ -244,26 +244,79 @@ bag.remove(5, 7);
 bag.size(); // => 0
 ```
 
-###Deque
-
-  items
-  pushFront
-  pushBack
-  popFront
-  popBack
-  peekFront
-  peekBack
-  remove
-  clear
-  copy
-  forwardIterator
-  reverseIterator
-  has
-  size
-
 ###Priority Queue
 
 ###Set
+
+###Deque
+
+```javascript
+// Create a deque.
+var deque = containers.deque();
+
+// Add an item to the front of the deque. O(?)
+deque.pushFront(1);
+
+// Add multiple items to the front of the deque. O(k?)
+deque.pushFront(2, 3, 4);
+
+// Peek at the front of the deque. O(1)
+deque.peekFront(); // => 4
+
+// Pop an item from the front of the deque. O(?)
+deque.popFront(); // => 4
+
+// Clear the deque of all items. O(?)
+deuqe.clear();
+deque.size(); // => 0
+
+// Add an item to the back of the deque. O(?)
+deque.pushBack(1);
+
+// Add multiple items to the back of the deque. O(k)
+deque.pushBack(2, 3, 4);
+
+// Peek at the back of the deque. O(1)
+deque.peekBack(); // => 4
+
+// Pop an item from the back of the deque. O(1)
+deque.popBack(); // => 4
+
+// Query the number of items in the deque. O(1)
+deque.size(); // => 3
+
+// Iterate the deque from front to back. O(n)
+deque.forwardIterator(function(item) {
+  console.log(item); // 1, 2, 3
+});
+
+// Iterate the deque from back to front. O(n)
+deque.reverseIterator(function(item) {
+  console.log(item); // 3, 2, 1
+});
+
+// Copy the deque. O(n)
+var newDeque = deque.copy();
+newDeque.size(); // => 3
+
+// Return a list of items (front-to-back). O(n)
+deque.items(); // => [1, 2, 3]
+
+// Check if the deque contains an item. O(n)
+deque.has(4); // => true
+deque.has(5); // => false
+
+// Use an array to populate the deque. O(k)
+deque.items([5, 6, 7]);
+deque.size(); // => 3
+
+// Remove an item. O(n)
+deque.remove(6); // 5, 7
+
+// Remove multiple items. O(kn)
+deque.remove(5, 7);
+deque.size(); // => 0
+```
 
 ##Extending a Container
 
@@ -322,10 +375,7 @@ function myStack() {
   // the stack items in sorted order.
   self.items = function items(items) {
     var items = _super.items.apply(this, arguments);
-    if (items === this)
-      return items;
-    else
-      return items.sort();
+    return items === this ? items : items.sort();
   }
 
   // Return the object.
@@ -334,7 +384,7 @@ function myStack() {
 
 // Try out the new method.
 var stack = myStack();
-stack.items([1, 2, 3]);
+stack.items([2, 1, 3]);
 stack.items(); // => [1, 2, 3];
 
 // Verify that the derived stack copies correctly.
