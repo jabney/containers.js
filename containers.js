@@ -596,7 +596,7 @@ containers.priorityQueue = function priorityQueue() {
   },
 
   // Remove the next item from the priority queue.
-  next: function() {
+  remove: function() {
     var head = null, last;
     if (heap.length) {
       head = heap[0];
