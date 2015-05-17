@@ -132,7 +132,7 @@ function timer(message, method) {
   method();
   t1 = performance.now();
   ms = t1 - t0;
-  console.log('Finished', message, 'in', Math.round(ms) + 'ms');
+  console.log('Finished', message, 'in', ms.toFixed(2) + 'ms');
 }
 
 function rand(min, max, count) {
