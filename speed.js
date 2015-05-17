@@ -9,9 +9,9 @@
 'use strict';
 
 var
-data1e4 = rand(0, 100, 1e4),
-data1e5 = rand(0, 100, 1e5),
-data12e5 = rand(0, 100, 1.2e5)
+data1e4 = range(0, 1e4),
+data1e5 = range(0, 1e5),
+data12e5 = range(0, 1.2e5)
 ;
 
 console.log('\nStack timing, using dequeArray implementation');
@@ -87,7 +87,7 @@ timer('fill and drain queue (100,000 items)', function() {
   }
 });
 
-timer('fill and drain queue (120,000 items)', function() {
+xtimer('fill and drain queue (120,000 items)', function() {
   var q = containers.queue();
   q.items(data12e5);
   while(q.size()) {
@@ -124,7 +124,7 @@ timer('fill and drain queue (120,000 items)', function() {
 
 console.log('All finished');
 
-
+// Perform a timed test.
 function timer(message, method) {
   var t0, t1, ms;
   console.log('Running', message + '...');
@@ -135,17 +135,12 @@ function timer(message, method) {
   console.log('Finished', message, 'in', ms.toFixed(2) + 'ms');
 }
 
-function rand(min, max, count) {
-  var r , i;
-  if (count !== undefined) {
-    r = [];
-    for (i = 0; i < count; i++)
-      r.push(Math.floor(Math.random() * (max-min)) + min);
-    return r;
-  }
-  return Math.floor(Math.random() * (max-min)) + min;
+// Disabled timer. Print message and do nothing.
+function xtimer(message) {
+  console.log('*** disabled ***', message, '*** disabled ***');
 }
 
+// Return an array of items from min to max-1.
 function range(min, max) {
   var r = [], i;
   for (i = min; i < max; i++) {
