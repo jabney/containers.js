@@ -100,13 +100,13 @@ var queue = containers.queue();
 
 **Note:** the unit test file, `unit.html`, incorporates some speed tests showing the potential heavy cost of `queue` with `dequeArray` (see the console when running unit tests). On one machine under Google Chrome, `queue` using `dequeArray` took several seconds to process a queue with 120,000 items, where `dequeList` only took a fraction of a second for the same tasks. This stands in stark contrast with a queue of size 100,000 on the same machine and with the same browser, where `dequeArray` outperformed `dequeList` significantly. This margin may vary starkly on different machines, and particularly with different browsers. Since queues of this size are usually corner cases, it's probably better to stick with `dequeArray` in most situations, unless guaranteed constant-time performance for adds and removes is preferred over a general, per-operation increase in performance (this only applies to `deque`, `bag`*, `stack`, and `queue`).
 
-`*bag.remove()` is based on `deque.remove()` and is a linear-time operation, as it removes a specific item from the list after searching to find it. This differs from `deque.popFront()` and `deque.popBack()`, which are both constant-time operations when `containers.dequeImpl` is set to `dequeList`. `bag.add()` is a constant-time operation regardless of whether `containers.dequeImpl` is set to `dequeArray` or `dequeList`. (`bag.remove()` was provided for convenience. If your use case requires a container that can add and remove a lot of items fast, `bag` may not be the best choice. `bag` can add and iterate items quickly, using either of the included deque implementations, but removing a single item is a linear-time operation, and removing all items from a bag is quadratic.)
+`*bag.remove()` is based on `deque.remove()` and is a linear-time operation. `bag.add()` uses `deque.pushBack()` and runs in constant time for either deque implementation.
 
 ##Container Interfaces
 
 Here each of the container interfaces are demonstrated in detail. While many interface methods are similar amongst containers, some are different. This applies particularly to methods for adding and removing items. 
 
-Run-time complexity, where guaranteed, is noted using big-O notation. `O(1)` denotes constant time operations; `O(n)` indicates linear time based on the number of items in the container; and `O(k)` signifies linear time based on the number of arguments passed (or the size of the given array where applicable). O(?) denotes run-time complexity that is most-likey deque implementation dependant. 
+Run-time complexity, where guaranteed, is noted using big-O notation. `O(1)` denotes constant time operations; `O(n)` indicates linear time based on the number of items in the container; and `O(k)` signifies linear time based on the number of arguments passed (or the size of the given array where applicable). O(?) denotes run-time complexity that is  deque implementation dependant. 
 
 ###Stack
 
@@ -245,54 +245,125 @@ bag.size(); // => 0
 
 ###Deque
 
+  items
+  pushFront
+  pushBack
+  popFront
+  popBack
+  peekFront
+  peekBack
+  remove
+  clear
+  copy
+  forwardIterator
+  reverseIterator
+  has
+  size
+
 ###Priority Queue
 
 ###Set
 
-##Augmenting a Container
+##Extending a Container
 
-`containers.js` has a built-in augmentation method, `extend`. By calling `extend` with a container and an object literal specified, methods and other properties can be added to a container. 
+The containers in `containers.js` are factory methods, returning an object as a result of the method call. There are at least two ways to extend a container and give it new properties and methods: an augmentation pattern, and an inheritance pattern.
 
-###Augment the original container
+###Extending with Augmentation
 
 ```javascript
+// Define a new stack function.
+function myStack() {
+  
+  // Create an instance of the original stack.
+  var stack = containers.stack();
 
-// Augment the original container.
-containers.stack = containers.extend(containers.stack, {
-  has: function(item) {
+  // Add a method to the instance.
+  stack.has = function has(item) {
     var items = this.items(), size = this.size(), i;
     for (i = 0; i < size; i++)
       if (item === items[i])
         return true;
     return false;
-  }
-});
+  };
 
-// Try out the new method.
-var stack = containers.stack();
+  // Return the augmented stack object.
+  return stack;
+}
+
+// Try out the new stack method.
+var stack = myStack();
 stack.push(1, 2, 3);
 stack.has(1); // => true
 stack.has(4); // => false
 ```
 
-### Create a separate augmented container
+###Extending with Inheritance
 
 ```javascript
-// Create an augmented container and leave the original one unchanged.
-var myStack = containers.extend(containers.stack, {
-  has: function(item) {
-    var items = this.items(), size = this.size(), i;
-    for (i = 0; i < size; i++)
-      if (item === items[i])
-        return true;
-    return false;
+// Define a new stack function.
+function myStack() {
+  
+  // Get an instance of the original stack.
+  var _super = containers.stack();
+
+  // Create a new object with the instance of
+  // the original stack as its prototype.
+  var self = Object.create(_super);
+
+  // Set the factory property to this new stack function.
+  // This ensures that the copy method returns the correct object.
+  self.factory = myStack;
+
+  // Optionally give the object a reference to _super.
+  self._super = _super;
+
+  // Override the items method with one that returns
+  // the stack items in sorted order.
+  self.items = function items(items) {
+    var items = _super.items.apply(this, arguments);
+    if (items === this)
+      return items;
+    else
+      return items.sort();
   }
-});
+
+  // Return the object.
+  return self;
+}
 
 // Try out the new method.
 var stack = myStack();
-stack.push(1, 2, 3);
-stack.has(1); // => true
-stack.has(4); // => false
+stack.items([1, 2, 3]);
+stack.items(); // => [1, 2, 3];
+
+// Verify that the derived stack copies correctly.
+var copy = stack.copy();
+copy.factory === myStack; // true
+copy.items(); // => [1, 2, 3]
+```
+
+###Augment the Original Container
+
+```javascript
+// Instead of creating a separate method, augment the original.
+containers.stack = (function(original) {
+  return function myStack() {
+
+    // Create an instance of the original stack.
+    var stack = original();
+
+    // Add a method to the instance.
+    stack.has = function has(item) {
+      var items = this.items(), size = this.size(), i;
+      for (i = 0; i < size; i++)
+        if (item === items[i])
+          return true;
+      return false;
+    };
+
+    // Return the augmented stack object.
+    return stack;
+  };
+})(containers.stack);
 
 ```
