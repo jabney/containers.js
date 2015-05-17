@@ -156,6 +156,8 @@ while(stack.size())
 
 ###Queue
 
+This container adds and removes items via `enq` and `deq`. The `deq` method will always remove and return the first-most item added via `enq`. 
+
 ```javascript
 // Create a queue.
 var queue = containers.queue();
@@ -198,6 +200,8 @@ while(queue.size())
 ```
 
 ###Bag
+
+This container adds and removes items via `add` and `remove`. Note that while `add` runs in constant time, `remove` is a linear-time operation. `bag` is most useful when you simply want to add items to a container and then iterate them.
 
 ```javascript
 // Create a bag.
@@ -246,9 +250,66 @@ bag.size(); // => 0
 
 ###Priority Queue
 
+This container adds and removes items via `insert` and `remove`. The main difference between this and other containers is that `priorityQueue` removes items based on a sort order, defined semantically as, "the lowest priority item".
+
+```javascript
+
+```
+
+One useful application for a priority queue is to execute a series of events based on a delay. The items can be added in any order, and they will be removed based on the time delay established when they were added.
+
+```javascript
+// Create a timed event factory to aid in building
+// a list of items with expiration times.
+function timedEvent(name, delayMs) {
+  return {
+    name: name,
+    priority: Date.now() + delayMs
+  };
+}
+
+// Create a new priority queue.
+var pq = containers.priorityQueue()
+  // Override the compare function to remove
+  // lowest priority items first.
+  .compare(function(a, b) {
+    return a.priority < b.priority;
+  })
+  // Add some events in arbitrary order.
+  .insert(timedEvent('3 seconds', 3000))
+  .insert(timedEvent('1.2 seconds', 1200))
+  .insert(timedEvent('1.2 seconds', 1200))
+  .insert(timedEvent('0.5 seconds', 500))
+  .insert(timedEvent('2 seconds', 2000))
+  .insert(timedEvent('2.5 seconds', 2500))
+  .insert(timedEvent('2.5 seconds', 2500))
+  .insert(timedEvent('2.5 seconds', 2500))
+  .insert(timedEvent('0.75 seconds', 750))
+  .insert(timedEvent('1.5 seconds', 1500));
+
+console.log('Running event queue with', pq.size(), 'items...')
+
+// Start a timer to check the priority queue at regular intervals.
+var timer = setInterval(function() {
+
+  // Check if any events in the queue have expired.
+  while(pq.size() && pq.peek().priority <= Date.now())
+    console.log(pq.remove().name);
+
+  // If the queue is empty, stop the timer.
+  if (!pq.size()) {
+    console.log('Event queue empty');
+    clearInterval(timer);
+  }
+}, 100);
+
+```
+
 ###Set
 
 ###Deque
+
+This container adds and removes items via `pushFront`, `pushBack`, `popFront`, and `popBack`. `deque` is primarily used as a backing object for `bag`, `stack`, and `queue`, although it may occasionally useful for other things as well. There are two implementations of `deque` (see [About `deque`'s Role'](#about-deque) for more details).
 
 ```javascript
 // Create a deque.
