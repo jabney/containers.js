@@ -25,9 +25,10 @@ Contents
   + [Deque](#deque)
   + [Priority Queue](#priority-queue)
   + [Set](#set)
-+ [Augmenting a Container](#augmenting-a-container)
-  + [Augment the original container](#augment-the-original-container)
-  + [Create a separate augmented container](#create-a-separate-augmented-container)
++ [Extending a Container](#extending-a-container)
+  + [Extending with Augmentation](#extending-with-augmentation)
+  + [Extending with Inheritance](#extending-with-inheritance)
+  + [Augment the Original Container](#augment-the-original-container)
 
 ##Usage
 
