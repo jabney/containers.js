@@ -23,6 +23,7 @@ Contents
   + [Queue](#queue)
   + [Bag](#bag)
   + [Priority Queue](#priority-queue)
+    + [Example](#priority-queue-example)
   + [Set](#set)
   + [Deque](#deque)
 + [Extending a Container](#extending-a-container)
@@ -256,11 +257,13 @@ This container adds and removes items via `insert` and `remove`. The main differ
 
 ```
 
+####Priority Queue Example
+
 One useful application for a priority queue is to execute a series of events based on a delay. The items can be added in any order, and they will be removed based on the time delay established when they were added.
 
 ```javascript
-// Create a timed event factory to aid in building
-// a list of items with expiration times.
+// Create a timed event factory to build a list
+// of items with expiration times.
 function timedEvent(name, delayMs) {
   return {
     name: name,
@@ -278,14 +281,16 @@ var pq = containers.priorityQueue()
   // Add some events in arbitrary order.
   .insert(timedEvent('3 seconds', 3000))
   .insert(timedEvent('1.2 seconds', 1200))
+  .insert(timedEvent('2.5 seconds', 2500))
+  .insert(timedEvent('3 seconds', 3000))
   .insert(timedEvent('1.2 seconds', 1200))
   .insert(timedEvent('0.5 seconds', 500))
   .insert(timedEvent('2 seconds', 2000))
   .insert(timedEvent('2.5 seconds', 2500))
-  .insert(timedEvent('2.5 seconds', 2500))
-  .insert(timedEvent('2.5 seconds', 2500))
   .insert(timedEvent('0.75 seconds', 750))
-  .insert(timedEvent('1.5 seconds', 1500));
+  .insert(timedEvent('1.5 seconds', 1500))
+  .insert(timedEvent('2.5 seconds', 2500))
+  .insert(timedEvent('0.75 seconds', 750));
 
 console.log('Running event queue with', pq.size(), 'items...')
 
@@ -452,6 +457,7 @@ stack.items(); // => [1, 2, 3];
 var copy = stack.copy();
 copy.factory === myStack; // true
 copy.items(); // => [1, 2, 3]
+
 ```
 
 ###Augment the Original Container
