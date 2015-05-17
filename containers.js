@@ -434,6 +434,8 @@ containers.bag = function bag() {
   // Return the count of items in the bag.
   size: deque.size,
 
+  deque: deque,
+
   factory: bag
   };
 };
@@ -488,6 +490,8 @@ containers.stack = function stack() {
 
   // Return the count of items on the stack.
   size: deque.size,
+
+  deque: deque,
 
   factory: stack
   };
@@ -544,6 +548,8 @@ containers.queue = function queue() {
   // Return the count of items in the queue.
   size: deque.size,
 
+  deque: deque,
+  
   factory: queue
   };
 };
