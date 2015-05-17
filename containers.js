@@ -183,7 +183,7 @@ containers.dequeList = function dequeList() {
 
   // Return a copy of this queue.
   copy: function() {
-    return dequeList().items(this.items());
+    return this.factory().items(this.items());
   },
 
   // Iterate the queue from front to back. O(n)
@@ -214,7 +214,10 @@ containers.dequeList = function dequeList() {
   // Return the number of items in the queue. O(1)
   size: function() {
     return size;
-  }};
+  },
+  
+  factory: dequeList
+  };
 
   // Return the node that contains 'item'. O(n)
   function find(item) {
@@ -346,7 +349,7 @@ containers.dequeArray = function dequeArray() {
 
   // Return a copy of this queue.
   copy: function() {
-    return dequeArray().items(this.items());
+    return this.factory().items(this.items());
   },
 
   // Iterate the queue from front to back.
@@ -371,7 +374,10 @@ containers.dequeArray = function dequeArray() {
   // Return the number of items in the queue.
   size: function() {
     return array.length;
-  }};
+  },
+  
+  factory: dequeArray
+  };
 };
 
 // ---------------------------------------------------------------
@@ -407,7 +413,7 @@ containers.bag = function bag() {
 
   // Return a copy of this bag.
   copy: function() {
-    return bag().items(deque.items());
+    return this.factory().items(deque.items());
   },
 
   // Iterate over items in the bag.
@@ -426,8 +432,9 @@ containers.bag = function bag() {
   has: deque.has,
 
   // Return the count of items in the bag.
-  size: deque.size
+  size: deque.size,
 
+  factory: bag
   };
 };
 
@@ -464,7 +471,7 @@ containers.stack = function stack() {
 
   // Return a copy of this stack.
   copy: function() {
-    return stack().items(deque.items());
+    return this.factory().items(deque.items());
   },
 
   // Remove all items from the stack.
@@ -480,8 +487,9 @@ containers.stack = function stack() {
   },
 
   // Return the count of items on the stack.
-  size: deque.size
+  size: deque.size,
 
+  factory: stack
   };
 };
 
@@ -518,7 +526,7 @@ containers.queue = function queue() {
 
   // Return a copy of this queue.
   copy: function() {
-    return queue().items(deque.items())
+    return this.factory().items(deque.items())
   },
 
   // Remove all items from the queue.
@@ -534,8 +542,9 @@ containers.queue = function queue() {
   },
 
   // Return the count of items in the queue.
-  size: deque.size
+  size: deque.size,
 
+  factory: queue
   };
 };
 
@@ -604,13 +613,16 @@ containers.priorityQueue = function priorityQueue() {
   },
 
   copy: function() {
-    return priorityQueue().compare(this.compare()).items(heap);
+    return this.factory().compare(this.compare()).items(heap);
   },
 
   // Return the count of items in the priority queue.
   size: function() {
     return heap.length
-  }};
+  },
+  
+  factory: priorityQueue
+  };
 
   // Sink an item from the top down to heap order.
   function sink(h) {
@@ -730,7 +742,7 @@ containers.set = function set() {
 
   // Return a copy of this set.
   copy: function() {
-    return set().key(this.key()).items(this.items())
+    return this.factory().key(this.key()).items(this.items());
   },
 
   // Convert this set to a representative string implicitly.
@@ -785,7 +797,10 @@ containers.set = function set() {
     this.union(b);
     this.complement(intersection);
     return this;
-  }};
+  },
+  
+  factory: set
+  };
 
   // Return an array of this set's items.
   function getItems(iterator) {
