@@ -174,10 +174,12 @@ containers.dequeList = function dequeList() {
     return this;
   },
 
-  // Remove all items from the queue. O(1)
+  // Remove all items from the queue. O(n)
   clear: function() {
-    head = tail = null;
-    size = 0;
+    // head = tail = null;
+    // size = 0;
+    while(this.size())
+      this.popBack();
     return this;
   },
 
