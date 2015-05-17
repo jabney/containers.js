@@ -367,4 +367,13 @@ containers.stack = (function(original) {
   };
 })(containers.stack);
 
+// Check that the container method is now myStack.
+containers.stack.name; // 'myStack'
+
+// Try out the new stack method.
+var stack = containers.stack();
+stack.push(1, 2, 3);
+stack.has(1); // => true
+stack.has(4); // => false
+
 ```
