@@ -279,39 +279,55 @@ var pq = containers.priorityQueue()
     return a.priority < b.priority;
   })
   // Add some events in arbitrary order.
+  .insert(timedEvent('2 seconds', 2000))
   .insert(timedEvent('3 seconds', 3000))
-  .insert(timedEvent('1.2 seconds', 1200))
-  .insert(timedEvent('2.5 seconds', 2500))
-  .insert(timedEvent('3 seconds', 3000))
+  .insert(timedEvent('0 seconds', 0))
   .insert(timedEvent('1.2 seconds', 1200))
   .insert(timedEvent('0.5 seconds', 500))
   .insert(timedEvent('2 seconds', 2000))
+  .insert(timedEvent('0 seconds', 0))
   .insert(timedEvent('2.5 seconds', 2500))
   .insert(timedEvent('0.75 seconds', 750))
   .insert(timedEvent('1.5 seconds', 1500))
-  .insert(timedEvent('2.5 seconds', 2500))
-  .insert(timedEvent('0.75 seconds', 750));
+  .insert(timedEvent('0.75 seconds', 750))
+  .insert(timedEvent('2 seconds', 2000));
 
-console.log('Running event queue with', pq.size(), 'items...')
+console.log('Running event queue with', pq.size(), 'items...');
 
 // Start a timer to check the priority queue at regular intervals.
-var timer = setInterval(function() {
-  var event;
+(function processQueue() {
+  var interval = 10;
 
   // Check if any events in the queue have expired.
-  while(pq.size() && pq.peek().priority <= Date.now()) {
+  while(pq.peek() && pq.peek().priority <= Date.now()) {
     event = pq.remove();
     console.log(event.name);
   }
 
-  // If the queue is empty, stop the timer.
-  if (!pq.size()) {
+  // If the queue still has items, reschedule.
+  if (pq.peek())
+    setTimeout(processQueue, interval);
+  else
     console.log('Event queue empty');
-    clearInterval(timer);
-  }
-}, 50);
+})();
 
 ```
+
+**Note:** Using `peek` alone to check priority queue status is perfectly safe when the queue contains objects, but can present issues with things like numbers or strings. Consider the following example:
+
+```javascript
+var pq = containers.priorityQueue()
+  .insert(1, 2, 0, 4, 3);
+
+// Drain the queue.
+while(pq.peek()) // WRONG!!!
+  console.log(pq.remove());
+
+console.log('items left:', pq.size()); // => 5 (!!!)
+
+```
+
+Since `0` is falsy, and ends up as the lead item, the `while` loop never runs. In cases where an item in the queue might be a falsy value, use `while(pq.size())` or `while(pq.peek() != null)` (`peek` returns `null` when the queue is empty).
 
 ###Set
 
