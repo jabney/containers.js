@@ -262,8 +262,8 @@ This container adds and removes items via `insert` and `remove`. The main differ
 One useful application for a priority queue is to execute a series of events based on a delay. The items can be added in any order, and they will be removed based on the time delay established when they were added.
 
 ```javascript
-// Create a timed event factory to build a list
-// of items with expiration times.
+// Create a timed event factory to help build a
+// priority queue of items with expiration times.
 function timedEvent(name, delayMs) {
   return {
     name: name,
@@ -296,17 +296,20 @@ console.log('Running event queue with', pq.size(), 'items...')
 
 // Start a timer to check the priority queue at regular intervals.
 var timer = setInterval(function() {
+  var event;
 
   // Check if any events in the queue have expired.
-  while(pq.size() && pq.peek().priority <= Date.now())
-    console.log(pq.remove().name);
+  while(pq.size() && pq.peek().priority <= Date.now()) {
+    event = pq.remove();
+    console.log(event.name);
+  }
 
   // If the queue is empty, stop the timer.
   if (!pq.size()) {
     console.log('Event queue empty');
     clearInterval(timer);
   }
-}, 100);
+}, 50);
 
 ```
 
