@@ -305,7 +305,7 @@ One useful application for a priority queue is to execute a series of events bas
 function timedEvent(name, delayMs) {
   return {
     name: name,
-    priority: Date.now() + delayMs
+    expiry: Date.now() + delayMs
   };
 }
 
@@ -314,7 +314,7 @@ var pq = containers.priorityQueue()
   // Override the compare function to remove
   // lowest priority items first.
   .compare(function(a, b) {
-    return a.priority < b.priority;
+    return a.expiry < b.expiry;
   })
   // Add some events in arbitrary order.
   .insert(timedEvent('2 seconds', 2000))
@@ -337,7 +337,7 @@ console.log('Running event queue with', pq.size(), 'items...');
   var interval = 10;
 
   // Check if any events in the queue have expired.
-  while(pq.size() && pq.peek().priority <= Date.now()) {
+  while(pq.size() && pq.peek().expiry <= Date.now()) {
     event = pq.remove();
     console.log(event.name);
   }
@@ -361,6 +361,18 @@ var a = containers.set();
 
 ```
 
+####Using Objects with `set`
+In order to add objects to a set, it's necessary that either: the object has a `toString` method which returns a unique identifier; or a custom `key` method is supplied which can return a unique identifier for the object.
+
+```javascript
+// Add a toString method to objects that returns a unique identifier.
+
+```
+
+```javascript
+// Supply a custom key method which returns a unique identifier for the object.
+
+```
 ###Deque
 
 This container adds and removes items via `pushFront`, `pushBack`, `popFront`, and `popBack`. `deque` is primarily used as a backing object for `bag`, `stack`, and `queue`, although it may occasionally useful for other things as well. There are two implementations of `deque` (see [About `deque`'s Role](#about-deques-role) for more details).
