@@ -51,6 +51,7 @@ bag.add(7, 4, 2);
 bag.each(function(item) {
     console.log(item); // => 7 4 2
 });
+
 ```
 
 **Note:** while the various container interfaces have common names in most cases (such as `copy`, `size` and `clear`) the methods for adding and removing items are specific to the container. For instance, the `stack` container uses the traditional `push` and `pop` methods, while the `queue` container uses `enq` and `deq`. Bag uses `add` and `remove`, and `deque` uses `pushFront`, `popFront`, `pushBack` and `popBack`.
@@ -96,6 +97,7 @@ deque = containers.deque();
 
 // Return an instance of queue which uses the myDequeImpl implementation.
 var queue = containers.queue();
+
 ```
 
 **Note:** if you want to provide a custom implementation of `deque`, make sure it conforms exactly to the interface as implemented by both `dequeArray` and `dequeList`. All of the methods should be present, signatures included, although the details of the implementation are entirely up you.
@@ -153,6 +155,7 @@ stack.size(); // => 3
 // Remove the items in stack order. O(1) per operation
 while(stack.size())
   stack.pop(); // 7, 6, 5
+
 ```
 
 ###Queue
@@ -198,6 +201,7 @@ queue.size(); // => 3
 // Remove the items in queue order. O(?)
 while(queue.size())
   queue.deq(); // 5, 6, 7
+
 ```
 
 ###Bag
@@ -247,6 +251,7 @@ bag.remove(6); // 5, 7
 // Remove multiple items. O(kn)
 bag.remove(5, 7);
 bag.size(); // => 0
+
 ```
 
 ###Priority Queue
@@ -348,6 +353,14 @@ console.log('Running event queue with', pq.size(), 'items...');
 
 ###Set
 
+This container ands and removes items via `add` and `remove`. The `set` container stores unique items only, so adding a duplicate item does nothing to change the set. This implementation supports mixing and matching numbers and strings, so both `1` and `"1"` can be added as separate items. This is accomplished via `set`'s default `key` method, which encodes an item's type as part of its key. Objects are supported as well, as long as the object has a `toString` method which returns a unique identifier; alternately, a custom `key` method can be supplied to generate a unique identifier for the object. These methods are discussed later.
+
+```javascript
+// Create a set.
+var a = containers.set();
+
+```
+
 ###Deque
 
 This container adds and removes items via `pushFront`, `pushBack`, `popFront`, and `popBack`. `deque` is primarily used as a backing object for `bag`, `stack`, and `queue`, although it may occasionally useful for other things as well. There are two implementations of `deque` (see [About `deque`'s Role'](#about-deque) for more details).
@@ -418,6 +431,7 @@ deque.remove(6); // 5, 7
 // Remove multiple items. O(kn)
 deque.remove(5, 7);
 deque.size(); // => 0
+
 ```
 
 ##Extending a Container
@@ -451,6 +465,7 @@ var stack = myStack();
 stack.push(1, 2, 3);
 stack.has(1); // => true
 stack.has(4); // => false
+
 ```
 
 ###Extending with Inheritance
@@ -530,3 +545,4 @@ stack.has(1); // => true
 stack.has(4); // => false
 
 ```
+
