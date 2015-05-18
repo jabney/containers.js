@@ -254,6 +254,39 @@ bag.size(); // => 0
 This container adds and removes items via `insert` and `remove`. The main difference between this and other containers is that `priorityQueue` removes items based on a sort order, defined semantically as, "the lowest priority item".
 
 ```javascript
+// Create a priorityQueue.
+var pq = containers.priorityQueue();
+
+// Create a compare method to order the queue high-to-low.
+// The default compare method returns a < b for low to high.
+pq.compare = function(a, b) { return b < a; }
+
+// Insert some items. O(k logn)
+pq.insert(5, 2, 3, 7);
+
+// Get the queue's items as a heap-ordered array. O(n)
+pq.items(); // [7, 5, 3, 2]
+
+// Check the size of the queue. O(1)
+pq.size(); // => 4
+
+// Peek at the head item. O(1)
+pq.peek(); // => 7
+
+// Remove the head item. O(logn)
+pq.remove(); // => 7
+
+// Clear the queue. O(1)
+pq.clear();
+pq.size(); // => 0
+
+// Set the queue's items with an array.
+pq.items([1, 4, 6]);
+pq.size(); // => 3;
+
+// Copy the priority queue.
+var newPq = pq.copy();
+newPq.size(); // => 3
 
 ```
 
@@ -299,35 +332,19 @@ console.log('Running event queue with', pq.size(), 'items...');
   var interval = 10;
 
   // Check if any events in the queue have expired.
-  while(pq.peek() && pq.peek().priority <= Date.now()) {
+  while(pq.size() && pq.peek().priority <= Date.now()) {
     event = pq.remove();
     console.log(event.name);
   }
 
   // If the queue still has items, reschedule.
-  if (pq.peek())
+  if (pq.size())
     setTimeout(processQueue, interval);
   else
     console.log('Event queue empty');
 })();
 
 ```
-
-**Note:** Using `peek` alone to check priority queue status is perfectly safe when the queue contains objects, but can present issues with things like numbers or strings. Consider the following example:
-
-```javascript
-var pq = containers.priorityQueue()
-  .insert(1, 2, 0, 4, 3);
-
-// Drain the queue.
-while(pq.peek()) // WRONG!!!
-  console.log(pq.remove());
-
-console.log('items left:', pq.size()); // => 5 (!!!)
-
-```
-
-Since `0` is falsy, and ends up as the lead item, the `while` loop never runs. In cases where an item in the queue might be a falsy value, use `while(pq.size())` or `while(pq.peek() != null)` (`peek` returns `null` when the queue is empty).
 
 ###Set
 
