@@ -17,7 +17,7 @@ Each container supports adding, removing, and iterating items, as well as: copyi
 
 Contents
 + [Usage](#usage)
-+ [About Deque's Role](#about-deque)
++ [About Deque's Role](#about-deques-role)
 + [Container Interfaces](#container-interfaces)
   + [Stack](#stack)
   + [Queue](#queue)
@@ -363,7 +363,7 @@ var a = containers.set();
 
 ###Deque
 
-This container adds and removes items via `pushFront`, `pushBack`, `popFront`, and `popBack`. `deque` is primarily used as a backing object for `bag`, `stack`, and `queue`, although it may occasionally useful for other things as well. There are two implementations of `deque` (see [About `deque`'s Role'](#about-deque) for more details).
+This container adds and removes items via `pushFront`, `pushBack`, `popFront`, and `popBack`. `deque` is primarily used as a backing object for `bag`, `stack`, and `queue`, although it may occasionally useful for other things as well. There are two implementations of `deque` (see [About `deque`'s Role](#about-deques-role) for more details).
 
 ```javascript
 // Create a deque.
