@@ -280,11 +280,11 @@ pq.remove(); // => 7
 pq.clear();
 pq.size(); // => 0
 
-// Set the queue's items with an array.
+// Set the queue's items with an array. O(k logn)
 pq.items([1, 4, 6]);
 pq.size(); // => 3;
 
-// Copy the priority queue.
+// Copy the priority queue. O(n)
 var newPq = pq.copy();
 newPq.size(); // => 3
 
