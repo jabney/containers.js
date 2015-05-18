@@ -15,7 +15,7 @@
 var containers = ex.containers || (ex.containers = Object.create(null));
 
 // containers.js version.
-containers.version = '0.1.1';
+containers.version = '1.0.0';
 
 // Shortcuts.
 
