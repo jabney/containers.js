@@ -353,11 +353,80 @@ console.log('Running event queue with', pq.size(), 'items...');
 
 ###Set
 
-This container ands and removes items via `add` and `remove`. The `set` container stores unique items only, so adding a duplicate item does nothing to change the set. This implementation supports mixing and matching numbers and strings, so both `1` and `"1"` can be added as separate items. This is accomplished via `set`'s default `key` method, which encodes an item's type as part of its key. Objects are supported as well, as long as the object has a `toString` method which returns a unique identifier; alternately, a custom `key` method can be supplied to generate a unique identifier for the object. These methods are discussed later.
+This container adds and removes items via `add` and `remove`. The `set` container stores unique items only, so adding a duplicate item does nothing to change the set. This implementation supports mixing and matching numbers and strings, so both `1` and `"1"` can be added as separate items. This is accomplished via `set`'s default `key` method, which encodes an item's type as part of its key. Objects are supported as well, as long as the object has a `toString` method which returns a unique identifier; alternately, a custom `key` method can be supplied to generate a unique identifier for the object. These methods are discussed later.
 
 ```javascript
 // Create a set.
-var a = containers.set();
+var set = containers.set();
+
+// Add some items.
+set.add(1, 1, 2, 2, 3, 3, 3, 4);
+
+// Check the size of the set.
+set.size(); // => 4
+
+// Remove an item.
+set.remove(4);
+set.size(); // => 3
+
+// Check if the set contains an item.
+set.has(2); // => true
+set.has(3); // => false
+
+// Get an array of the set's items.
+set.items(); // => [1, 2, 3]
+
+// Get an array of the set's keys
+// (keys are encoded with the object's type).
+set.keys(); // ["(1:3)", "(2:3)", "(3:3)"]
+
+// Iterate over the set's items and keys.
+set.each(function(item, key) {
+  console.log(item, key); // => 1 "(1:3)", 2 "(2:3)", 3 "(3:3)" 
+});
+
+// Clear the set.
+set.clear();
+set.size(); // => 0
+
+// Add strings instead of numbers.
+set.add('1', '2', '3');
+
+// Inspect the keys.
+set.keys(); // => ["(1:5)", "(2:5)", "(3:5)"]
+
+// Add numbers to the set.
+set.add(1, 2, 3);
+set.size(); // => 6
+
+// Inspect the keys.
+set.keys(); // => ["(1:3)", "(1:5)", "(2:3)", "(2:5)", "(3:3)", "(3:5)"]
+
+// Set Operations - aside from equals, set operations modify the calling set.
+
+// (Assume this initialization happens between set operations.)
+var a = containers.set().add(1, 2, 3);
+var b = containers.set().add(3, 4, 5);
+
+// Check if the sets are equal. (a = b)
+a.equals(b); // => false
+b.equals(a); // => false
+
+// Perform a set union. (a ∪ b)
+a.union(b);
+a.items(); // => [1, 2, 3, 4, 5]
+
+// Perform a set intersection. (a ∩ b)
+a.intersection(b);
+a.items(); // => [3]
+
+// Perform a set complement. (a - b)
+a.complement(b);
+a.items(); // => [1, 2]
+
+// Perform a set difference. (symmetric difference, a Δ b)
+a.difference(b);
+a.items(); // => [1, 2, 4, 5]
 
 ```
 
@@ -367,12 +436,45 @@ In order to add objects to a set, it's necessary that either: the object has a `
 ```javascript
 // Add a toString method to objects that returns a unique identifier.
 
+// Create a toString method to be referenced from objects.
+function toStr() {
+  return this.id;
+}
+
+var
+ob1 = {id: 1, toString: toStr},
+ob2 = {id: 2, toString: toStr},
+ob3 = {id: 3, toString: toStr};
+
+// Create a new set and add the objects.
+var set = containers.set()
+  .add(ob1, ob2, ob3);
+
+// Get an array of the items in the set.
+set.items(); // => [{id:1}, {id:2}, {id:3}]
+
 ```
 
 ```javascript
 // Supply a custom key method which returns a unique identifier for the object.
 
+var
+ob1 = {id: 1},
+ob2 = {id: 2},
+ob3 = {id: 3};
+
+// Create a new set with a custom key method and add the objects.
+var set = containers.set()
+  .key(function() {
+    return this.id;
+  })
+  .add(ob1, ob2, ob3);
+
+// Get an array of the items in the set.
+set.items(); // => [{id:1}, {id:2}, {id:3}]
+
 ```
+
 ###Deque
 
 This container adds and removes items via `pushFront`, `pushBack`, `popFront`, and `popBack`. `deque` is primarily used as a backing object for `bag`, `stack`, and `queue`, although it may occasionally useful for other things as well. There are two implementations of `deque` (see [About `deque`'s Role](#about-deques-role) for more details).
