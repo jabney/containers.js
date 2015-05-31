@@ -25,6 +25,7 @@ Contents
   + [Priority Queue](#priority-queue)
     + [Example](#priority-queue-example)
   + [Set](#set)
+    + [Using Objects with Set](#using-objects-with-set)
   + [Deque](#deque)
 + [Extending a Container](#extending-a-container)
   + [Extending with Augmentation](#extending-with-augmentation)
