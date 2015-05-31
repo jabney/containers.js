@@ -15,7 +15,7 @@
 var containers = ex.containers || (ex.containers = Object.create(null));
 
 // containers.js version.
-containers.version = '1.0.0';
+containers.version = '1.0.1';
 
 // Shortcuts.
 
@@ -575,7 +575,7 @@ containers.priorityQueue = function priorityQueue() {
     return this;
   },
 
-  // Get or set an array of items for this pq.
+  // Get or set an array of items for this pq. O(n), O(logn)
   items: function(items) {
     if (!arguments.length)
       return heap.slice(0, heap.length);
@@ -586,7 +586,7 @@ containers.priorityQueue = function priorityQueue() {
     return this;
   },
 
-  // Add one or more items to the priority queue.
+  // Add one or more items to the priority queue. O(logn)
   insert: function() {
     slice.call(arguments, 0).forEach(function(item) {
       heap.push(item);
@@ -595,7 +595,7 @@ containers.priorityQueue = function priorityQueue() {
     return this;
   },
 
-  // Remove the next item from the priority queue.
+  // Remove the next item from the priority queue. O(logn)
   remove: function() {
     var head = null, last;
     if (heap.length) {
@@ -608,23 +608,24 @@ containers.priorityQueue = function priorityQueue() {
     return head;
   },
 
-  // Remove all items from the priority queue.
+  // Remove all items from the priority queue. O(1)
   clear: function() {
     heap = [];
     return this;
   },
 
-  // Return the head item without modifying the queue.
+  // Return the head item without modifying the queue. O(1)
   peek: function() {
     var item = heap[0];
     return item !== undefined ? item : null;
   },
 
+  // Return a copy of the queue. O(n)
   copy: function() {
     return this.factory().compare(this.compare()).items(heap);
   },
 
-  // Return the count of items in the priority queue.
+  // Return the count of items in the priority queue. O(1)
   size: function() {
     return heap.length
   },
