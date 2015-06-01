@@ -449,10 +449,10 @@ ob3 = {id: 3, toString: toStr};
 
 // Create a new set and add the objects.
 var set = containers.set()
-  .add(ob1, ob2, ob3);
+  .add(ob1, ob2, ob2, ob3, ob3, ob3);
 
-// Get an array of the items in the set.
-set.items(); // => [{id:1}, {id:2}, {id:3}]
+// Get an array of items in the set.
+set.items(); // => [{id:1, ...}, {id:2, ...}, {id:3, ...}]
 
 ```
 
@@ -469,9 +469,9 @@ var set = containers.set()
   .key(function() {
     return this.id;
   })
-  .add(ob1, ob2, ob3);
+  .add(ob1, ob2, ob2, ob3, ob3, ob3);
 
-// Get an array of the items in the set.
+// Get an array of items in the set.
 set.items(); // => [{id:1}, {id:2}, {id:3}]
 
 ```
