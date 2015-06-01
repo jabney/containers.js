@@ -257,7 +257,7 @@ bag.size(); // => 0
 
 ###Priority Queue
 
-This container adds and removes items via `insert` and `remove`. The main difference between this and other containers is that `priorityQueue` removes items based on a sort order, defined semantically as, "the lowest priority item".
+This container adds and removes items via `insert` and `remove`. The main difference between this and other containers is that `priorityQueue` removes items based on a sort order, defined semantically as, "the highest priority item".
 
 ```javascript
 // Create a priorityQueue.
@@ -371,8 +371,8 @@ set.remove(4);
 set.size(); // => 3
 
 // Check if the set contains an item.
-set.has(2); // => true
-set.has(3); // => false
+set.has(3); // => true
+set.has(4); // => false
 
 // Get an array of the set's items.
 set.items(); // => [1, 2, 3]
