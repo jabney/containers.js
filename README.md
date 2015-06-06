@@ -335,7 +335,7 @@ console.log('Running event queue with', pq.size(), 'items...');
 
 // Start a timer to check the priority queue at regular intervals.
 (function processQueue() {
-  var interval = 10;
+  var interval = 10, event;
 
   // Check if any events in the queue have expired.
   while(pq.size() && pq.peek().expiry <= Date.now()) {
@@ -458,6 +458,10 @@ set.items(); // => [{id:1, ...}, {id:2, ...}, {id:3, ...}]
 
 ```javascript
 // Supply a custom key method which returns a unique identifier for the object.
+// Note: overriding the default key method means that a set can no longer
+//   differentiate between items of different types. Only use this method when
+//   mixing and matching of numbers, strings, and objects is not necessary.
+
 
 var
 ob1 = {id: 1},
@@ -479,6 +483,7 @@ set.items(); // => [{id:1}, {id:2}, {id:3}]
 ###Deque
 
 This container adds and removes items via `pushFront`, `pushBack`, `popFront`, and `popBack`. `deque` is primarily used as a backing object for `bag`, `stack`, and `queue`, although it may occasionally useful for other things as well. There are two implementations of `deque` (see [About `deque`'s Role](#about-deques-role) for more details).
+
 
 ```javascript
 // Create a deque.
@@ -592,19 +597,19 @@ function myStack() {
   // Get an instance of the original stack.
   var _super = containers.stack();
 
-  // Create a new object with the instance of
+  // Create a new stack object with the instance of
   // the original stack as its prototype.
   var self = Object.create(_super);
 
-  // Set the factory property to this new stack function.
-  // This ensures that the copy method returns the correct object.
+  // Override the factory property of this new stack object.
+  // This ensures that the copy method returns the correct type.
   self.factory = myStack;
 
   // Optionally give the object a reference to _super.
   self._super = _super;
 
-  // Override the items method with one that returns
-  // the stack items in sorted order.
+  // Override the items method with one that
+  // returns the stack items in sorted order.
   self.items = function items(items) {
     var items = _super.items.apply(this, arguments);
     return items === this ? items : items.sort();
